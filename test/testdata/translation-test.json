@@ -1,0 +1,22 @@
+{
+  "integrations": {
+    "test": {
+      "name": "Test",
+      "description": "This is a test",
+      "customConfirmation": {
+        "heading": "Custom test heading",
+        "message": "Custom test message"
+      },
+      "configuration": {
+        "name": "Name of configuration",
+        "testName": "Name of the GitHub organisation"
+      },
+      "helpText": {
+        "testName": "#### HELP: TEST NAME\n This is a test help text.\n\nSee [documentation](https://a-test.com) for more information. \n\n  ![Test](images/test/test.png)"
+      },
+      "links": {
+        "docs": "Docs"
+      }
+    }
+  }
+}

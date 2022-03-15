@@ -1,0 +1,32 @@
+name: 'build-test'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          npm install
+      - run: |
+          npm run all
+
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
+          TRANSLATION_JSON=$(echo "$(pwd)/test/testdata/translation-test.json")
+          echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
+          echo "translation_json=$TRANSLATION_JSON" >> $GITHUB_ENV
+      - uses: ./
+        with:
+          integration-id: 'test'
+          integration-json: '${{ env.integration_json }}'
+          translation-json: '${{ env.translation_json }}'

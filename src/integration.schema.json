@@ -1,0 +1,420 @@
+{
+  "$id": "https://vsm.integration.schema.json",
+  "title": "vsm.integrations.configurations",
+  "description": "Defines the fields and structure of a VSM integration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "pattern": "integration\\.schema\\.json",
+      "description": "Path to the JSON schema. Must match `integration.schema.json`."
+    },
+    "id": {
+      "type": "string",
+      "description": "The id of the integration"
+    },
+    "links": {
+      "type": "array",
+      "description": "Array of integration links.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Translation key for link title to show on UI."
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to the integration documentation or configuration. Both external (e.g. https://leanix.net) and internal (e.g. /admin/integration-api) links are supported."
+          }
+        },
+        "required": [
+          "title",
+          "url"
+        ]
+      }
+    },
+    "connectorType": {
+      "type": "string",
+      "enum": [
+        "pull-connector",
+        "externally-executed-connector"
+      ],
+      "description": "The type of the connector, executed by this integration"
+    },
+    "feature": {
+      "type": "object",
+      "description": "Required feature for showing the integration in the UI, defined in MTM.",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "(admin|integration|inventory)\\.",
+          "description": "The id of the feature"
+        },
+        "showInList": {
+          "type": "string",
+          "description": "The id of the according `showInList` feature"
+        }
+      },
+      "required": [
+        "id",
+        "showInList"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "development",
+        "runtime",
+        "business-context",
+        "compliance",
+        "custom",
+        "collaboration",
+        "API"
+      ],
+      "description": "The category under which the integration is listed"
+    },
+    "connectorTemplateName": {
+      "type": "string",
+      "description": "Name of the related connector template from the Integration Hub"
+    },
+    "connectorId": {
+      "type": "string",
+      "description": "Name of the related connector ID from the Integration Hub (see the \"bindingKey\" for reference)."
+    },
+    "executionGroup": {
+      "type": "string",
+      "description": "Execution group name used to execute as if the admin had configured all processors in one configuration"
+    },
+    "extensionStatus": {
+      "type": "string",
+      "description": "The status of the extension can be found in the extension JSON in the provisioning service",
+      "enum": [
+        "General Availability",
+        "Early Access",
+        "In Development",
+        "Planned",
+        "End of Life",
+        "Deprecated"
+      ]
+    },
+    "logo": {
+      "type": "string",
+      "description": "The path to the logo of the integration which will be shown in the UI. The base path is assets.",
+      "pattern": "logos/.+\\.svg"
+    },
+    "video": {
+      "type": "string",
+      "description": "Link to a short explanation video",
+      "pattern": "https://(www\\.)?(youtu).*(embed).+"
+    },
+    "configurable": {
+      "type": "boolean",
+      "description": "If set to true, user can configure the integration on UI"
+    },
+    "nameHelpText": {
+      "type": "string",
+      "description": "Optional translation key for configuration name field help text"
+    },
+    "customConfirmation": {
+      "type": "object",
+      "description": "Provisioning confirmation modal header and message",
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "type": "string",
+          "description": "Heading of provisioning confirmation modal"
+        },
+        "message": {
+          "type": "string",
+          "description": "Provisioning confirmation modal message"
+        }
+      },
+      "required": [
+        "heading",
+        "message"
+      ]
+    },
+    "configurationPages": {
+      "type": "array",
+      "minItems": 0,
+      "default": [],
+      "description": "An array containing dynamic configuration pages",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the configuration page"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/configurationItem"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "items"
+        ]
+      }
+    },
+    "configurationSections": {
+      "type": "array",
+      "minItems": 0,
+      "default": [],
+      "description": "An array containing dynamic configuration fields",
+      "items": {
+        "$ref": "#/definitions/configurationSection"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "connectorType",
+    "links",
+    "feature",
+    "category",
+    "connectorTemplateName",
+    "$schema",
+    "configurationSections"
+  ],
+  "definitions": {
+    "configurationItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the field"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "number",
+            "email",
+            "password",
+            "boolean",
+            "json",
+            "string-array",
+            "radio",
+            "code-snippet",
+            "create-technical-user",
+            "go-to-sync-log"
+          ],
+          "description": "The field type"
+        },
+        "path": {
+          "type": "string",
+          "description": "The attribute path from which the value is accessed and stored in the UI",
+          "pattern": "(connector|secrets)Configuration.*"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Input placeholder to be shown on UI"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the field is required in the UI"
+        },
+        "defaultValue": {
+          "description": "The default value of the field"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Configuration field help text"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Configuration field hint"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Translation key for option label"
+              },
+              "value": {
+                "type": "string",
+                "description": "Option value"
+              },
+              "childConfigurationItemId": {
+                "type": "string",
+                "description": "The id of child field to be shown when option is selected"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "variables": {
+          "type": "array",
+          "description": "Variables which will be replaced by the provided value in the UI. It can be referenced in the translation file via $variable",
+          "minItems": 0,
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the variable"
+              },
+              "dynamic": {
+                "type": "boolean",
+                "description": "Dynamic variables can be filled via a separate input in the UI. Non-dynamic variables are filled automatically (e.g. workspaceId).",
+                "default": false
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the variable value",
+                "enum": [
+                  "text",
+                  "string-array"
+                ],
+                "default": "text"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether dynamic variable is required to be filled on UI or not",
+                "default": false
+              },
+              "inputBound": {
+                "type": "boolean",
+                "description": "If set to true code snippet value will be re-generated as corresponding input-bound value is updated",
+                "default": false
+              },
+              "helpText": {
+                "type": "string",
+                "description": "Configuration variable input field help text",
+                "default": false
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "dynamic": {
+                      "const": false
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "name": {
+                      "enum": [
+                        "clusterName",
+                        "datasourceName",
+                        "datasourceId",
+                        "workspaceId",
+                        "instanceUrl",
+                        "domainUrl"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "code-snippet"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "variables"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "radio"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "path",
+              "options"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "text",
+                  "number",
+                  "email",
+                  "password",
+                  "boolean",
+                  "json",
+                  "string-array"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "path"
+            ]
+          }
+        }
+      ]
+    },
+    "configurationSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the configuration section"
+        },
+        "items": {
+          "type": "array",
+          "description": "The configuration items of this section",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/configurationItem"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "items"
+      ]
+    }
+  }
+}

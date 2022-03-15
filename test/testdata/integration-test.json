@@ -1,0 +1,39 @@
+{
+  "$schema": "../../src/integration.schema.json",
+  "id": "test",
+  "links": [
+    {
+      "title": "docs",
+      "url": "https://docs-vsm.leanix.net/docs/test"
+    }
+  ],
+  "connectorType": "pull-connector",
+  "feature": {
+    "id": "integration.vsm.test",
+    "showInList": "integration.vsm.test.showInList"
+  },
+  "category": "development",
+  "connectorTemplateName": "vsm-test-connector",
+  "connectorId": "leanix-test-connector",
+  "logo": "logos/test.svg",
+  "customConfirmation": {
+    "heading": "customConfirmation.heading",
+    "message": "customConfirmation.message"
+  },
+  "configurable": true,
+  "executionGroup": "vsmTestInbound",
+  "configurationSections": [
+    {
+      "name": "connectorConfiguration",
+      "items": [
+        {
+          "id": "testName",
+          "type": "text",
+          "path": "connectorConfiguration.testName",
+          "helpText": "testName",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
