@@ -58,26 +58,26 @@ function assertHasValidMarkdown(integrationField: IntegrationConfigurationField,
     console.debug(`[${integrationName}] Rendered HTML for ${integrationField.id}:\n`, document.body.innerHTML);
 
     if (!markdownAsHtml) {
-      throw new Error(`[${integrationName}] Markdown of field ${integrationField} cannot be parsed as valid HTML`);
+      throw new Error(`[${integrationName}] Markdown of field ${integrationField.id} cannot be parsed as valid HTML`);
     }
 
     // the image path depends on nexus structure, might need to be adjusted
     Array.from(document.querySelectorAll('img')).forEach((image) => {
       if (!image.src.includes('images/') || !image.alt) {
         throw new Error(
-          `[${integrationName}] Image with source path ${image.src} in field ${integrationField} has invalid source path or missing alt text`
+          `[${integrationName}] Image with source path ${image.src} in field ${integrationField.id} has invalid source path or missing alt text`
         );
       }
     });
 
     Array.from(document.querySelectorAll('a')).forEach((link) => {
       if (!link.href.startsWith('https://')) {
-        throw new Error(`[${integrationName}] Link with href ${link.href} in field ${integrationField} does not start with https://`);
+        throw new Error(`[${integrationName}] Link with href ${link.href} in field ${integrationField.id} does not start with https://`);
       }
     });
 
     if (index === 0 && !document.body.firstElementChild!.tagName.startsWith('H')) {
-      throw new Error(`[${integrationName}] Hint text markdown for ${integrationField} does not start with a heading`);
+      throw new Error(`[${integrationName}] Hint text markdown for ${integrationField.id} does not start with a heading`);
     }
   });
 }

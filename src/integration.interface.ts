@@ -25,7 +25,6 @@ export interface IntegrationConfigurationField {
 export interface IntegrationConfigurationOption {
   id: string;
   label: string;
-  value: string | boolean;
   enables?: string[];
 }
 
@@ -38,4 +37,5 @@ export interface Integration {
   pages: IntegrationConfigurationPage[];
   configurationNameHelpText?: string;
   logo?: string;
+  enables?: string[];
 }

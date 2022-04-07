@@ -1,37 +1,44 @@
 {
   "$schema": "../../src/integration.schema.json",
-  "id": "test",
-  "links": [
-    {
-      "title": "docs",
-      "url": "https://docs-vsm.leanix.net/docs/test"
-    }
-  ],
-  "connectorType": "pull-connector",
-  "feature": {
-    "id": "integration.vsm.test",
+  "name": "test",
+  "docs": "https://docs-vsm.leanix.net/test",
+  "featureFlags": {
+    "dependsOn": ["integration.vsm.test"],
     "showInList": "integration.vsm.test.showInList"
   },
-  "category": "development",
-  "connectorTemplateName": "vsm-test-connector",
-  "connectorId": "leanix-test-connector",
-  "logo": "logos/test.svg",
-  "customConfirmation": {
-    "heading": "customConfirmation.heading",
-    "message": "customConfirmation.message"
-  },
-  "configurable": true,
-  "executionGroup": "vsmTestInbound",
-  "configurationSections": [
+  "category": "API",
+  "description": "integration test",
+  "pages": [
     {
-      "name": "connectorConfiguration",
-      "items": [
+      "id": "page1",
+      "label": "Page 1",
+      "fields": [
         {
-          "id": "testName",
-          "type": "text",
-          "path": "connectorConfiguration.testName",
-          "helpText": "testName",
-          "required": true
+          "id": "field1",
+          "type": "radio",
+          "defaultValue": "default",
+          "helpText": "field1 help",
+          "hintBox": "### HINT field1 hint",
+          "label": "field1 label",
+          "options": [
+            {
+              "id": "option1",
+              "enables": ["field2"],
+              "label": "Option 1"
+            },
+            {
+              "id": "option2",
+              "label": "Option 2"
+            }
+          ]
+        },
+        {
+          "id": "field2",
+          "type": "boolean",
+          "defaultValue": "default",
+          "helpText": "field2 help",
+          "hintBox": "### HINT field2 hint",
+          "label": "field2 label"
         }
       ]
     }
