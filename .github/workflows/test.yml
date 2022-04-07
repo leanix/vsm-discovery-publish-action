@@ -38,4 +38,3 @@ jobs:
         with:
           integration-id: 'test'
           integration-json: '${{ env.integration_json }}'
-          translation-json: '${{ env.translation_json }}'
