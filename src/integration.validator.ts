@@ -33,12 +33,14 @@ export default function validateIntegration(integrationId: string, integrationJs
   const configurationFields = integrationJson.pages.flatMap((page) => page.fields);
   for (const configurationField of configurationFields) {
     assertHasValidMarkdown(configurationField, integrationId);
-    configurationField.options?.forEach((option) => {
+
+    for (const option of configurationField.options || []) {
       const invalidChildFields = option.enables?.filter((childItemId) => !configurationFields.find((field) => field.id === childItemId));
-      invalidChildFields?.forEach((childItemId) => {
+
+      for (const childItemId of invalidChildFields || []) {
         throw new Error(`[${integrationId}] Specified chield field of ${option.id} with id ${childItemId} does not exist`);
-      });
-    });
+      }
+    }
   }
 }
 
@@ -46,6 +48,7 @@ function assertHasValidMarkdown(integrationField: IntegrationConfigurationField,
   const { document } = new JSDOM(`...`).window;
   const markdownKeys: (keyof IntegrationConfigurationField)[] = ['hintBox', 'snippet'];
 
+  // eslint-disable-next-line github/array-foreach
   markdownKeys.forEach((markdownKey, index) => {
     const markdown = integrationField[markdownKey];
     if (!markdown) {
@@ -62,19 +65,19 @@ function assertHasValidMarkdown(integrationField: IntegrationConfigurationField,
     }
 
     // the image path depends on nexus structure, might need to be adjusted
-    Array.from(document.querySelectorAll('img')).forEach((image) => {
+    for (const image of Array.from(document.querySelectorAll('img'))) {
       if (!image.src.includes('images/') || !image.alt) {
         throw new Error(
           `[${integrationName}] Image with source path ${image.src} in field ${integrationField.id} has invalid source path or missing alt text`
         );
       }
-    });
+    }
 
-    Array.from(document.querySelectorAll('a')).forEach((link) => {
+    for (const link of Array.from(document.querySelectorAll('a'))) {
       if (!link.href.startsWith('https://')) {
         throw new Error(`[${integrationName}] Link with href ${link.href} in field ${integrationField.id} does not start with https://`);
       }
-    });
+    }
 
     if (index === 0 && !document.body.firstElementChild!.tagName.startsWith('H')) {
       throw new Error(`[${integrationName}] Hint text markdown for ${integrationField.id} does not start with a heading`);
