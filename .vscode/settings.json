@@ -1,14 +1,11 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-    "eslint.options": {
-      "configFile": ".eslintrc.json",
-      "eslint.validate": [
-        "javascript"
-      ]
-    },
-    "prettier.enable": true,
-    "prettier.configPath": ".prettierrc.json",
-    "typescript.preferences.importModuleSpecifier": "relative"
-  }
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.options": {
+    "overrideConfigFile": ".eslintrc.json"
+  },
+  "prettier.enable": true,
+  "prettier.configPath": ".prettierrc.json",
+  "typescript.preferences.importModuleSpecifier": "relative"
+}
