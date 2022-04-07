@@ -31,9 +31,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
-          TRANSLATION_JSON=$(echo "$(pwd)/test/testdata/translation-test.json")
           echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
-          echo "translation_json=$TRANSLATION_JSON" >> $GITHUB_ENV
       - uses: ./
         with:
           integration-id: 'test'
