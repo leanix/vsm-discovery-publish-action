@@ -19,7 +19,7 @@ export default function validateIntegration(integrationId: string, integrationJs
   // ensure integration.schema.json is a valid JSONSchema
   const validate = ajv.validateSchema(schema);
   if (!validate || ajv.errors) {
-    throw new Error('Integration JSON schema is not valid!');
+    throw new Error('Integration JSON schema is not valid');
   }
 
   // ensure integration is valid according to schema
