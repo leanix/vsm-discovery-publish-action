@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2
 
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
@@ -35,8 +36,12 @@ jobs:
 
       - name: Commit & push dist folder
         run: |
-          git config user.name ${{ github.actor }}
-          git config user.email '${{ github.actor }}@users.noreply.github.com'
-          git add dist
-          git commit -am "Update dist files"
-          git push
+          if expr $(git status --porcelain | grep dist | wc -l) \> 0; then
+            git config user.name ${{ github.actor }}
+            git config user.email '${{ github.actor }}@users.noreply.github.com'
+            git add dist
+            git commit -am "Update dist files"
+            git push
+          else
+            echo "No dist files were updated"
+          fi
