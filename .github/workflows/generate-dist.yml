@@ -31,8 +31,10 @@ jobs:
           npm run build
           npm run package
 
-      - name: Push updated dist files
-        uses: EndBug/add-and-commit@v9.0.0
-        with:
-          add: 'dist'
-          message: 'Update dist files'
+      - name: Commit & push dist folder
+        run: |
+          git config user.name ${{ github.actor }}
+          git config user.email '${{ github.actor }}@users.noreply.github.com'
+          git add dist
+          git commit -am "Update dist files"
+          git push
