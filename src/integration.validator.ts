@@ -1,25 +1,25 @@
-import { IntegrationCodeSnippetField, IntegrationField, IntegrationJson, TranslationJson } from './integration.interface';
 import Ajv from 'ajv';
-import { JSDOM } from 'jsdom';
 import addFormats from 'ajv-formats';
 import fs from 'fs-extra';
+import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import path from 'path';
+import { Integration, IntegrationConfigurationField } from './integration.interface';
 
-export default function validateIntegration(integrationId: string, integrationJsonPath: string, translationJsonPath: string): void {
+// TODO check code snippet variables when defined in schema
+export default function validateIntegration(integrationId: string, integrationJsonPath: string): void {
   const ajv = new Ajv();
   addFormats(ajv, ['uri']);
 
   const schemaPath = path.join(__dirname, 'integration.schema.json');
   const schema: Record<string, unknown> = fs.readJsonSync(schemaPath);
 
-  const integrationJson: IntegrationJson = fs.readJsonSync(integrationJsonPath);
-  const translationJson: TranslationJson = fs.readJsonSync(translationJsonPath);
+  const integrationJson: Integration = fs.readJsonSync(integrationJsonPath);
 
-  // ensures integration.schema.json is a valid JSONSchema
+  // ensure integration.schema.json is a valid JSONSchema
   const validate = ajv.validateSchema(schema);
   if (!validate || ajv.errors) {
-    throw new Error('JSON Schema is not valid');
+    throw new Error('Integration JSON schema is not valid!');
   }
 
   // ensure integration is valid according to schema
@@ -27,128 +27,60 @@ export default function validateIntegration(integrationId: string, integrationJs
   const validationResult = compiledSchema(integrationJson);
 
   if (compiledSchema.errors || !validationResult) {
-    throw new Error('Integration JSON is not a valid implementation of the schema');
+    throw new Error(`Integration JSON ${integrationId} is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`);
   }
 
-  // ensures configurable integration has set "connectorId"
-  if (integrationJson.configurationSections.length && !integrationJson.connectorId) {
-    throw new Error('`connectorId` cannot be null for configurable integrations');
-  }
+  const configurationFields = integrationJson.pages.flatMap((page) => page.fields);
+  for (const configurationField of configurationFields) {
+    assertHasValidMarkdown(configurationField, integrationId);
 
-  // translation available for name and description
-  const translationForIntegration = translationJson.integrations[integrationId];
-  if (!translationForIntegration) {
-    throw new Error(`No translation available for ${integrationId}`);
-  }
+    for (const option of configurationField.options || []) {
+      const invalidChildFields = option.enables?.filter((childItemId) => !configurationFields.find((field) => field.id === childItemId));
 
-  if (!translationForIntegration.name || !translationForIntegration.description) {
-    throw new Error('Name and Description must have an available translation');
-  }
-
-  // translation available for all integration links
-  if (!translationForIntegration.links || integrationJson.links.some((link) => !translationForIntegration.links[link.title])) {
-    throw new Error('All links must have an available translation');
-  }
-
-  // translation available for every field
-  const translationFields = Object.keys(translationJson.integrations[integrationId].configuration);
-  const fieldIds = integrationJson.configurationSections.flatMap((section) => section.items).map((field) => field.id);
-  if (fieldIds.some((id) => !translationFields.includes(id))) {
-    throw new Error('All fields must have an available translation');
-  }
-
-  // can parse markdown to valid HTML
-  const fieldsWithHelp = integrationJson.configurationSections
-    .flatMap((section) => section.items)
-    .filter((field) => field.helpText)
-    .sort();
-
-  // translation available for all required help text lines
-  for (const integrationField of fieldsWithHelp) {
-    const markdown = translationJson.integrations[integrationId].helpText![integrationField.helpText!];
-    assertIsValidMarkdown(markdown, integrationField, integrationJson, true);
-  }
-
-  // translation available for each title page
-  const translationConfigPages = translationJson.integrations[integrationId].configurationPages || {};
-  if (Object.values(translationConfigPages).some((translation) => !translation.title)) {
-    throw new Error('All title must have an available translation');
-  }
-
-  // translation available for all variables in code snippets
-  if (integrationJson.configurationPages?.length) {
-    for (const page of integrationJson.configurationPages!) {
-      for (const codeSnippetField of page.items.filter((field) => field.type === 'code-snippet')) {
-        const codeSnippetTranslation: string =
-          translationJson.integrations[integrationId].configurationPages![page.name][codeSnippetField.id].codeSnippet;
-
-        if (!codeSnippetTranslation) {
-          throw new Error('All code snippets must have a translation');
-        }
-
-        if (
-          (codeSnippetField as IntegrationCodeSnippetField).variables.some(
-            (variable) => !codeSnippetTranslation.includes(`$${variable.name}`)
-          )
-        ) {
-          throw new Error('All code snippets variables must have a translation');
-        }
-
-        assertIsValidMarkdown(codeSnippetTranslation, codeSnippetField, integrationJson);
-      }
-    }
-
-    // translation available for each dynamic variable
-    for (const page of integrationJson.configurationPages!) {
-      const codeSnippetFields = page.items.filter(
-        (field: IntegrationField) => field.type === 'code-snippet' && (field as IntegrationCodeSnippetField).variables.length
-      ) as IntegrationCodeSnippetField[];
-
-      for (const codeSnippetField of codeSnippetFields) {
-        if (
-          codeSnippetField
-            .variables!.filter((variable) => variable.dynamic)
-            .some(
-              (variable) =>
-                !translationJson.integrations[integrationId].configurationPages![page.name][codeSnippetField.id].variables[variable.name]
-            )
-        ) {
-          throw new Error('All dynamic variables must have a translation');
-        }
+      for (const childItemId of invalidChildFields || []) {
+        throw new Error(`[${integrationId}] Specified chield field of ${option.id} with id ${childItemId} does not exist`);
       }
     }
   }
 }
 
-function assertIsValidMarkdown(
-  markdown: string,
-  integrationField: IntegrationField,
-  integrationJson: IntegrationJson,
-  assertStartWithHeading?: boolean
-) {
+function assertHasValidMarkdown(integrationField: IntegrationConfigurationField, integrationName: string) {
   const { document } = new JSDOM(`...`).window;
-  const markdownAsHtml = marked.parse(markdown, {});
+  const markdownKeys: (keyof IntegrationConfigurationField)[] = ['hintBox', 'snippet'];
 
-  document.body.innerHTML = markdownAsHtml;
-  // eslint-disable-next-line no-console
-  console.debug(
-    `Rendered HTML for ${integrationField.helpText || integrationField.id} in ${integrationJson.id}:\n`,
-    document.body.innerHTML
-  );
+  // eslint-disable-next-line github/array-foreach
+  markdownKeys.forEach((markdownKey, index) => {
+    const markdown = integrationField[markdownKey];
+    if (!markdown) {
+      return;
+    }
 
-  if (!markdownAsHtml) {
-    throw new Error('Markdown cannot be parsed as valid HTML');
-  }
+    const markdownAsHtml = marked.parse(markdown, {});
 
-  if (!Array.from(document.querySelectorAll('img')).every((image) => image.src.includes('images/') && !!image.alt)) {
-    throw new Error('There are invalid image paths.');
-  }
+    document.body.innerHTML = markdownAsHtml;
+    console.debug(`[${integrationName}] Rendered HTML for ${integrationField.id}:\n`, document.body.innerHTML);
 
-  if (!Array.from(document.querySelectorAll('a')).every((link) => link.href.startsWith('https://'))) {
-    throw new Error('There are links which do not start with https://');
-  }
+    if (!markdownAsHtml) {
+      throw new Error(`[${integrationName}] Markdown of field ${integrationField.id} cannot be parsed as valid HTML`);
+    }
 
-  if (assertStartWithHeading && !document.body.firstElementChild!.tagName.startsWith('H')) {
-    throw new Error('Markdown do not start with a heading');
-  }
+    // the image path depends on nexus structure, might need to be adjusted
+    for (const image of Array.from(document.querySelectorAll('img'))) {
+      if (!image.src.includes('images/') || !image.alt) {
+        throw new Error(
+          `[${integrationName}] Image with source path ${image.src} in field ${integrationField.id} has invalid source path or missing alt text`
+        );
+      }
+    }
+
+    for (const link of Array.from(document.querySelectorAll('a'))) {
+      if (!link.href.startsWith('https://')) {
+        throw new Error(`[${integrationName}] Link with href ${link.href} in field ${integrationField.id} does not start with https://`);
+      }
+    }
+
+    if (index === 0 && !document.body.firstElementChild!.tagName.startsWith('H')) {
+      throw new Error(`[${integrationName}] Hint text markdown for ${integrationField.id} does not start with a heading`);
+    }
+  });
 }

@@ -1,0 +1,57 @@
+name: 'build & test'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'dist/**/*'
+
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: |
+          npm install
+          npm run all
+
+      - name: Commit & push dist folder
+        run: |
+          if expr $(git status --porcelain | grep dist | wc -l) \> 0; then
+            git config user.name github-actions[bot]
+            git config user.email 'github-actions[bot]@users.noreply.github.com'
+            git add dist
+            git commit -m "Update dist files"
+            git push
+          else
+            echo "No dist files were updated"
+          fi
+
+  # make sure the action works on a clean machine without building
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - run: |
+          INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
+          echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
+      - uses: ./
+        with:
+          integration-id: 'test'
+          integration-json: '${{ env.integration_json }}'
