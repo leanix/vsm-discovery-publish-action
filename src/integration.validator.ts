@@ -27,7 +27,7 @@ export default function validateIntegration(integrationId: string, integrationJs
   const validationResult = compiledSchema(integrationJson);
 
   if (compiledSchema.errors || !validationResult) {
-    throw new Error(`Integration JSON ${integrationId} is not a valid implementation of the schema`);
+    throw new Error(`Integration JSON ${integrationId} is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`);
   }
 
   const configurationFields = integrationJson.pages.flatMap((page) => page.fields);
