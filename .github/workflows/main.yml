@@ -1,23 +1,16 @@
-name: generate-dist
-
-on:
+name: 'build & test'
+on: # rebuild any PRs and main branch changes
   pull_request:
     branches: [main]
 
 jobs:
-  build:
+  build: # make sure build/ci work properly
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 2
-
-      - name: Set Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -26,13 +19,10 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install dependencies
-        run: npm ci
 
-      - name: Rebuild the dist/ directory
-        run: |
-          npm run build
-          npm run package
+      - run: |
+          npm install
+          npm run all
 
       - name: Commit & push dist folder
         run: |
@@ -45,3 +35,20 @@ jobs:
           else
             echo "No dist files were updated"
           fi
+
+  # make sure the action works on a clean machine without building
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - run: |
+          INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
+          echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
+      - uses: ./
+        with:
+          integration-id: 'test'
+          integration-json: '${{ env.integration_json }}'
