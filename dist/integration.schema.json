@@ -114,30 +114,23 @@
                 "snippet": {
                   "type": "string",
                   "description": "Used by code-snippet fields to define the text to render within the code block"
+                },
+                "enables": {
+                  "$ref": "#/definitions/enables"
                 }
               },
               "allOf": [
                 {
                   "if": {
-                    "properties": {
-                      "type": {
-                        "const": "boolean"
-                      }
-                    }
-                  },
-                  "then": {
-                    "properties": {
-                      "enables": {
-                        "type": "array",
-                        "description": "List of ids of children fields to show when the field is checked",
-                        "minItems": 1,
-                        "items": {
-                          "type": "string"
+                    "not": {
+                      "properties": {
+                        "type": {
+                          "const": "boolean"
                         }
                       }
                     }
                   },
-                  "else": {
+                  "then": {
                     "not": {
                       "required": ["enables"]
                     }
@@ -215,6 +208,14 @@
     }
   },
   "definitions": {
+    "enables": {
+      "type": "array",
+      "description": "List of ids of children fields to show when the option is selected",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
     "options": {
       "type": "array",
       "minItems": 2,
@@ -229,12 +230,7 @@
             "description": "Displayed name of the option"
           },
           "enables": {
-            "type": "array",
-            "description": "List of ids of children fields to show when the option is selected",
-            "minItems": 1,
-            "items": {
-              "type": "string"
-            }
+            "$ref": "#/definitions/enables"
           }
         },
         "required": ["id", "label"],

@@ -3,7 +3,7 @@ on: # rebuild any PRs and main branch changes
   pull_request:
     branches: [main]
     paths-ignore:
-      - 'dist/**/*'
+      - 'dist/**'
 
 jobs:
   build: # make sure build/ci work properly
@@ -27,7 +27,7 @@ jobs:
           npm install
           npm run all
 
-      - name: Commit & push dist folder
+      - name: Commit & push dist folder if needed
         run: |
           if expr $(git status --porcelain | grep dist | wc -l) \> 0; then
             git config user.name github-actions[bot]

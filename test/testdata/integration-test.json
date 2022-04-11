@@ -38,7 +38,13 @@
           "defaultValue": "default",
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
-          "label": "field2 label"
+          "label": "field2 label",
+          "enables": ["field3"]
+        },
+        {
+          "id": "field3",
+          "type": "text",
+          "label": "field3 label"
         }
       ]
     }
