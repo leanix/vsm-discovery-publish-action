@@ -1,9 +1,6 @@
 name: Generate integrations client model
 
 on:
-  push:
-    branches:
-      - main
   repository_dispatch:
     types: [openapi-spec-updated]
 
