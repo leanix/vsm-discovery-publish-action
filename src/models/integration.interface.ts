@@ -20,6 +20,7 @@ export interface IntegrationConfigurationField {
   hintBox?: string;
   options?: IntegrationConfigurationOption[];
   snippet?: string;
+  enables?: string[];
 }
 
 export interface IntegrationConfigurationOption {
@@ -37,5 +38,4 @@ export interface Integration {
   pages: IntegrationConfigurationPage[];
   configurationNameHelpText?: string;
   logo?: string;
-  enables?: string[];
 }
