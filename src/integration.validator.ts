@@ -6,15 +6,21 @@ import { marked } from 'marked';
 import path from 'path';
 import { Integration, IntegrationConfigurationField, IntegrationConfigurationOption } from './models/integration.interface';
 
-// TODO check code snippet variables when defined in schema
-export default function validateIntegration(integrationId: string, integrationJsonPath: string): void {
+export default function validateIntegration(integrationJsonPath: string): void {
   const ajv = new Ajv();
   addFormats(ajv, ['uri']);
 
   const schemaPath = path.join(__dirname, 'integration.schema.json');
   const schema: Record<string, unknown> = fs.readJsonSync(schemaPath);
+  let integrationJson: Integration;
 
-  const integrationJson: Integration = fs.readJsonSync(integrationJsonPath);
+  try {
+    integrationJson = fs.readJsonSync(integrationJsonPath);
+  } catch (error) {
+    throw new Error(`Error reading integration JSON from path '${integrationJsonPath}'`);
+  }
+
+  const integrationName = integrationJson.name;
 
   // ensure integration.schema.json is a valid JSONSchema
   const validate = ajv.validateSchema(schema);
@@ -27,19 +33,23 @@ export default function validateIntegration(integrationId: string, integrationJs
   const validationResult = compiledSchema(integrationJson);
 
   if (compiledSchema.errors || !validationResult) {
-    throw new Error(`Integration JSON '${integrationId}' is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`);
+    throw new Error(`Integration JSON '${integrationName}' is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`);
   }
 
+  // ensure configuration fields have valid markdown
+  // and only existing fields are referenced via `enabled` property
   const configurationFields = integrationJson.pages.flatMap((page) => page.fields);
   for (const configurationField of configurationFields) {
-    assertHasValidMarkdown(configurationField, integrationId);
+    assertHasValidMarkdown(configurationField, integrationName);
 
-    validateChildItems(configurationField, configurationFields, integrationId);
+    validateChildItems(configurationField, configurationFields, integrationName);
 
     for (const option of configurationField.options || []) {
-      validateChildItems(option, configurationFields, integrationId);
+      validateChildItems(option, configurationFields, integrationName);
     }
   }
+
+  // TODO validate code snippet variables as soon as they are defined in schema
 }
 
 function assertHasValidMarkdown(integrationField: IntegrationConfigurationField, integrationName: string) {

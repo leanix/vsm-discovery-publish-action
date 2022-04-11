@@ -54,5 +54,4 @@ jobs:
           echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
       - uses: ./
         with:
-          integration-id: 'test'
           integration-json: '${{ env.integration_json }}'

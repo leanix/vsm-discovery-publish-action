@@ -1,6 +1,6 @@
 # Validate Integration Action
 
-This Action takes an integration config JSON file as input and checks its validity.
+This Action takes an integration config JSON file as input and checks its validity according to the schema defined in [@leanix/nexus](https://github.com/leanix/nexus/blob/main/docs/specs/integrations/integration.schema.json).
 
 ## Setup
 
@@ -18,20 +18,11 @@ Build the typescript and package it for distribution
 $ npm run build && npm run package
 ```
 
-## Publish to a distribution branch
+## Publishing
 
-Actions are run from GitHub repos so we will checkin the packed dist folder.
+**Do not push any changes to the dist folder, as those changes will be overridden**. When changing the validator, the dist folder will be automatically re-built and added to the current PR. This action is run from GitHub repositories, for this reason the dist folder must be checked in.
 
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Your action is now published! :rocket:
+After your PR has been merged, your changes are published! :rocket:
 
 See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
 

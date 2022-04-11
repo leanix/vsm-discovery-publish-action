@@ -4,5 +4,5 @@ import validateIntegration from '../../src/integration.validator';
 
 test('validate integration', async () => {
   const integrationJsonPath = path.join(__dirname, '../testdata/integration-test.json');
-  expect(() => validateIntegration('test', integrationJsonPath)).not.toThrow();
+  expect(() => validateIntegration(integrationJsonPath)).not.toThrow();
 });

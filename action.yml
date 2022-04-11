@@ -1,16 +1,10 @@
 name: 'Validate Integration JSON'
-description: 'Validate integration configuration JSON'
+description: 'Validate an integration configuration JSON according to the schema defined in [@leanix/nexus](https://github.com/leanix/nexus)'
 author: 'LeanIX'
 inputs:
-  integration-id:
-    required: true
-    description: 'id of the integration'
   integration-json:
     required: true
     description: 'Absolute path to the integration JSON file'
-  translation-json:
-    required: true
-    description: 'Absolute path to the translation JSON file'
 runs:
   using: 'node16'
   main: 'dist/index.js'
