@@ -1,6 +1,6 @@
 # Validate Integration Action
 
-This Action takes an integration config JSON file as input and checks its validity according to the schema defined in [@leanix/nexus](https://github.com/leanix/nexus).
+This Action takes an integration config JSON file as input and checks its validity according to the schema defined in [@leanix/nexus](https://github.com/leanix/nexus/blob/main/docs/specs/integrations/integration.schema.json).
 
 ## Setup
 
