@@ -17,7 +17,8 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "sort-imports": "off"
+    "sort-imports": "off",
+    "i18n-text/no-en": "off"
   },
   "env": {
     "node": true,
