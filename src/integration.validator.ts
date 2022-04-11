@@ -59,7 +59,7 @@ function assertHasValidMarkdown(integrationField: IntegrationConfigurationField,
     console.debug(`[${integrationName}] Rendered HTML for field '${integrationField.id}':\n`, document.body.innerHTML);
 
     if (!markdownAsHtml) {
-      throw new Error(`[${integrationName}] Markdown of field '${integrationField.id}' could not be parsed as valid HTML`);
+      throw new Error(`[${integrationName}] Markdown of field '${integrationField.id}' could not be parsed as valid HTML!`);
     }
 
     // the image path depends on nexus structure, might need to be adjusted
