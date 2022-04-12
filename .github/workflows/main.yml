@@ -9,11 +9,16 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
+      - name: Inject secret store credentials
+        uses: leanix/secrets-action@master
+        with:
+          secret-store-credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 2
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ env.GITHUB_TOKEN }}
 
       - name: Cache node modules
         uses: actions/cache@v2
@@ -31,8 +36,8 @@ jobs:
       - name: Commit & push dist folder if needed
         run: |
           if expr $(git status --porcelain | grep dist | wc -l) \> 0; then
-            git config user.name github-actions[bot]
-            git config user.email 'github-actions[bot]@users.noreply.github.com'
+            git config user.name leanix-ci
+            git config user.email 'leanix-ci@users.noreply.github.com'
             git add dist
             git commit -m "Update dist files"
             git push
