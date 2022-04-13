@@ -51,3 +51,4 @@ jobs:
           author: leanix-ci <leanix-ci@users.noreply.github.com>
           commit-message: Update OpenAPI client files for ${{ github.event.client_payload.name }}
           body: This PR has been created automatically to reflect the backend changes of ${{ github.event.client_payload.name }}
+          token: ${{ env.GITHUB_TOKEN }}
