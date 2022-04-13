@@ -51,5 +51,7 @@ jobs:
           author: leanix-ci <leanix-ci@users.noreply.github.com>
           committer: leanix-ci <leanix-ci@users.noreply.github.com>
           commit-message: Update OpenAPI client files for ${{ github.event.client_payload.name }}
-          body: This PR has been created automatically to reflect the backend changes of ${{ github.event.client_payload.name }}
+          body: This PR has been generated to reflect the backend changes of ${{ github.event.client_payload.name }}. Link to related backend changes: ${{ github.event.client_payload.commitUrl }}
           token: ${{ env.GITHUB_TOKEN }}
+          labels: openapi-generated
+          delete-branch: true
