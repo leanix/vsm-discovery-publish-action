@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 
 const pathMappings: Record<string, string> = {
-  integration: 'src/models/.generated'
+  'vsm-discovery': 'src/models/.generated'
 };
 
 const appName = process.argv[3];
