@@ -4,7 +4,9 @@ import fs from 'fs-extra';
 import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import path from 'path';
-import { Integration, IntegrationConfigurationField, IntegrationConfigurationOption } from './models/integration.interface';
+import { FieldEntity } from './models/.generated/field-entity';
+import { FieldOptionEntity } from './models/.generated/field-option-entity';
+import { IntegrationDto } from './models/.generated/integration-dto';
 
 export default function validateIntegration(integrationJsonPath: string): void {
   const ajv = new Ajv();
@@ -12,7 +14,7 @@ export default function validateIntegration(integrationJsonPath: string): void {
 
   const schemaPath = path.join(__dirname, 'integration.schema.json');
   const schema: Record<string, unknown> = fs.readJsonSync(schemaPath);
-  let integrationJson: Integration;
+  let integrationJson: IntegrationDto;
 
   try {
     integrationJson = fs.readJsonSync(integrationJsonPath);
@@ -52,13 +54,11 @@ export default function validateIntegration(integrationJsonPath: string): void {
   // TODO validate code snippet variables as soon as they are defined in schema
 }
 
-function assertHasValidMarkdown(integrationField: IntegrationConfigurationField, integrationName: string) {
+function assertHasValidMarkdown(integrationField: FieldEntity, integrationName: string) {
   const { document } = new JSDOM(`...`).window;
-  const markdownKeys: (keyof IntegrationConfigurationField)[] = ['hintBox', 'snippet'];
 
   // eslint-disable-next-line github/array-foreach
-  markdownKeys.forEach((markdownKey, index) => {
-    const markdown = integrationField[markdownKey];
+  [integrationField.snippet, integrationField.hintBox].forEach((markdown, index) => {
     if (!markdown) {
       return;
     }
@@ -95,11 +95,7 @@ function assertHasValidMarkdown(integrationField: IntegrationConfigurationField,
   });
 }
 
-function validateChildItems(
-  item: IntegrationConfigurationField | IntegrationConfigurationOption,
-  allFields: IntegrationConfigurationField[],
-  integrationId: string
-) {
+function validateChildItems(item: FieldEntity | FieldOptionEntity, allFields: FieldEntity[], integrationId: string) {
   const invalidChildFields = item.enables?.filter((childItemId) => !allFields.find((field) => field.id === childItemId));
 
   for (const childItemId of invalidChildFields || []) {
