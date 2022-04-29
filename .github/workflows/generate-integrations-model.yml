@@ -52,9 +52,10 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           title: Update OpenAPI client files for ${{ github.event.client_payload.name }}
           author: leanix-ci <leanix-ci@users.noreply.github.com>
+          assignees: leanix-ci
           committer: leanix-ci <leanix-ci@users.noreply.github.com>
           commit-message: Update OpenAPI client files for ${{ github.event.client_payload.name }}
-          body: 'This PR has been generated to reflect the backend changes of ${{ github.event.client_payload.name }}. Link to related backend changes ${{ github.event.client_payload.commitUrl }}'
+          body: 'This PR has been generated to reflect the backend changes of ${{ github.event.client_payload.name }}. See ${{ github.event.client_payload.commitUrl }}'
           token: ${{ env.GITHUB_TOKEN }}
           labels: openapi-generated
           delete-branch: true
