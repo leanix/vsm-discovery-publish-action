@@ -22,27 +22,14 @@ const REGIONS: Readonly<Record<string, string>> = {
 
 async function run(): Promise<void> {
   const integrationJsonPath: string = core.getInput('integration-json');
-  const credentialsInput = core.getInput('credentials');
-  core.setFailed(`environment: ${JSON.stringify(process.env)}`);
 
   if (!integrationJsonPath) {
     core.setFailed('Please provide a path to the integration JSON file');
     process.exit(1);
   }
-
-  if (!credentialsInput) {
-    core.setFailed('Please provide secret store credentials');
-    process.exit(1);
-  }
-
-  const credentials: SecretStoreCredentials = JSON.parse(credentialsInput);
-  process.env.AZURE_CLIENT_ID = credentials.ARM_CLIENT_ID;
-  process.env.AZURE_CLIENT_SECRET = credentials.ARM_CLIENT_SECRET;
-  process.env.AZURE_TENANT_ID = credentials.ARM_TENANT_ID;
-
   try {
     validateIntegration(integrationJsonPath);
-    await postToRegions(credentials);
+    await postToRegions();
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -50,17 +37,17 @@ async function run(): Promise<void> {
   }
 }
 
-async function postToRegions(credentials: SecretStoreCredentials): Promise<void> {
+async function postToRegions(): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
-    const token = await getDiscoveryToken(credentials, region, regionId);
+    const token = await getDiscoveryToken(region, regionId);
     core.debug(`Received token for region ${region}: ${token}`);
   }
 }
 
-async function getDiscoveryToken(credentials: SecretStoreCredentials, region: string, regionId: string): Promise<Secret> {
+async function getDiscoveryToken(region: string, regionId: string): Promise<Secret> {
   const client = new KeyVaultManagementClient(
-    new ClientSecretCredential(credentials.ARM_TENANT_ID, credentials.ARM_CLIENT_ID, credentials.ARM_CLIENT_SECRET),
-    credentials.ARM_SUBSCRIPTION_ID
+    new ClientSecretCredential(process.env.ARM_TENANT_ID!, process.env.ARM_CLIENT_ID!, process.env.ARM_CLIENT_SECRET!),
+    process.env.ARM_SUBSCRIPTION_ID!
   );
   return await client.secrets.get(`keyvault-${region}-aks`, `lx${region}prod`, `vsm-discovery-oauth-secret-${regionId}-svc`);
 }
