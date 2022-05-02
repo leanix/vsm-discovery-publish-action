@@ -9,6 +9,7 @@ function run(): void {
   }
 
   try {
+    console.log(process.env);
     validateIntegration(integrationJsonPath);
   } catch (error) {
     if (error instanceof Error) {
