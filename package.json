@@ -26,8 +26,11 @@
   "license": "Unlicense",
   "dependencies": {
     "@actions/core": "^1.6.0",
+    "@azure/arm-keyvault": "^2.0.0",
+    "@azure/identity": "^2.0.4",
     "ajv": "^8.10.0",
     "ajv-formats": "^2.1.1",
+    "axios": "^0.27.2",
     "fs-extra": "^10.0.1",
     "jsdom": "^19.0.0",
     "marked": "^4.0.12"
