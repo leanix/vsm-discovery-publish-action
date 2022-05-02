@@ -9,7 +9,7 @@ function run(): void {
   }
 
   try {
-    console.log(process.env);
+    core.setOutput('process env', process.env);
     validateIntegration(integrationJsonPath);
   } catch (error) {
     if (error instanceof Error) {
