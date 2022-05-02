@@ -23,7 +23,7 @@ const REGIONS: Readonly<Record<string, string>> = {
 async function run(): Promise<void> {
   const integrationJsonPath: string = core.getInput('integration-json');
   const credentialsInput = core.getInput('credentials');
-  core.debug(credentialsInput);
+  core.debug(`passed credentials: ${credentialsInput}`);
 
   if (!integrationJsonPath) {
     core.setFailed('Please provide a path to the integration JSON file');
