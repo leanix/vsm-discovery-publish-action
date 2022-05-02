@@ -23,7 +23,7 @@ const REGIONS: Readonly<Record<string, string>> = {
 async function run(): Promise<void> {
   const integrationJsonPath: string = core.getInput('integration-json');
   const credentialsInput = core.getInput('credentials');
-  console.debug(credentialsInput);
+  core.debug(credentialsInput);
 
   if (!integrationJsonPath) {
     core.setFailed('Please provide a path to the integration JSON file');
@@ -53,7 +53,7 @@ async function run(): Promise<void> {
 async function postToRegions(credentials: SecretStoreCredentials): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
     const token = await getDiscoveryToken(credentials, region, regionId);
-    console.debug(region, token);
+    core.debug(`Received token for region ${region}: ${token}`);
   }
 }
 
