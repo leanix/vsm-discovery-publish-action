@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+// eslint-disable-next-line import/named
 import { KeyVaultManagementClient, Secret } from '@azure/arm-keyvault';
 import { ClientSecretCredential } from '@azure/identity';
 import validateIntegration from './integration.validator';
