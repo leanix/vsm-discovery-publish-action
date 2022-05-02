@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 
 const pathMappings: Record<string, string> = {
-  'vsm-discovery': 'src/models/.generated'
+  'vsm-discovery': 'src/.openapi-generated'
 };
 
 const appName = process.argv[3];
@@ -17,8 +17,7 @@ if (!fs.existsSync(appPath)) {
 }
 
 try {
-  // we only care about generated models here
-  fs.copySync(`${filesSourceDir}/models`, `${__dirname}/../${appPath}`);
+  fs.copySync(filesSourceDir, `${__dirname}/../${appPath}`);
 } catch (error) {
   throw new Error(`Could not copy ${filesSourceDir} to ${appPath}`);
 }
