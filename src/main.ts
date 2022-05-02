@@ -33,7 +33,7 @@ async function run(): Promise<void> {
 async function postToRegions(): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
     const token = await getDiscoveryToken(region, regionId);
-    core.debug(`Received token for region ${region}: ${token}`);
+    core.debug(`Received token for region ${region}: ${token.properties.value}`);
   }
 }
 
