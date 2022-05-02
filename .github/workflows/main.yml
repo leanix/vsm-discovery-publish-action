@@ -66,3 +66,4 @@ jobs:
       - uses: ./
         with:
           integration-json: '${{ env.integration_json }}'
+          credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
