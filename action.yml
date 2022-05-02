@@ -1,10 +1,13 @@
 name: 'Validate Integration JSON'
-description: 'Validate an integration configuration JSON according to the schema defined in [@leanix/nexus](https://github.com/leanix/nexus)'
+description: 'Validate an integration configuration JSON according to the schema defined in [@leanix/vsm-discovery](https://github.com/leanix/vsm-discovery)'
 author: 'LeanIX'
 inputs:
   integration-json:
     required: true
     description: 'Absolute path to the integration JSON file'
+  credentials:
+    required: true
+    description: 'Injected secret store credentials'
 runs:
   using: 'node16'
   main: 'dist/index.js'
