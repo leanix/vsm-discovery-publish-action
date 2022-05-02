@@ -4,9 +4,9 @@ import fs from 'fs-extra';
 import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import path from 'path';
-import { FieldEntity } from './models/.generated/field-entity';
-import { FieldOptionEntity } from './models/.generated/field-option-entity';
-import { IntegrationDto } from './models/.generated/integration-dto';
+import { FieldEntity } from './.openapi-generated/models/field-entity';
+import { FieldOptionEntity } from './.openapi-generated/models/field-option-entity';
+import { IntegrationDto } from './.openapi-generated/models/integration-dto';
 
 export default function validateIntegration(integrationJsonPath: string): void {
   const ajv = new Ajv();
@@ -66,6 +66,7 @@ function assertHasValidMarkdown(integrationField: FieldEntity, integrationName: 
     const markdownAsHtml = marked.parse(markdown, {});
 
     document.body.innerHTML = markdownAsHtml;
+    // eslint-disable-next-line no-console
     console.debug(`[${integrationName}] Rendered HTML for field '${integrationField.id}':\n`, document.body.innerHTML);
 
     if (!markdownAsHtml) {
