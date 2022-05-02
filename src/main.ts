@@ -50,7 +50,7 @@ async function run(): Promise<void> {
 async function postToRegions(credentials: SecretStoreCredentials): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
     const token = await getDiscoveryToken(credentials, region, regionId);
-    core.setOutput(region, token);
+    console.debug(region, token);
   }
 }
 
