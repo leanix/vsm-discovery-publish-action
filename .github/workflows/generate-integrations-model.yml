@@ -31,7 +31,7 @@ jobs:
 
       - name: Fetch OpenAPI spec
         id: fetch-openapi-spec
-        run: echo ::set-output name=specJson::$(curl --location --request GET 'https://eu.leanix.net/services/vsm-discovery/v1/v3/api-docs/')
+        run: echo ::set-output name=specJson::$(curl --location --request GET 'https://eu.leanix.net/services/vsm-discovery/v1/openapi')
 
       - name: Write OpenAPI spec to file
         uses: DamianReeves/write-file-action@v1.0
