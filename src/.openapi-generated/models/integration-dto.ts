@@ -13,6 +13,7 @@ export interface IntegrationDto {
   docs: string;
   featureFlags: FeatureFlags;
   id: string;
+  logo?: string;
   name: string;
   pages: Array<PageEntity>;
 }

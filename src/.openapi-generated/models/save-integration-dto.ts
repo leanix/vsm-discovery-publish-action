@@ -12,6 +12,7 @@ export interface SaveIntegrationDto {
   description: string;
   docs: string;
   featureFlags: FeatureFlags;
+  logo?: string;
   name: string;
   pages: Array<PageEntity>;
 }
