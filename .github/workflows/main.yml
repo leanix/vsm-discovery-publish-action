@@ -1,6 +1,5 @@
 name: 'build & test'
 on: # rebuild any PRs and main branch changes
-  push:
   pull_request:
     branches: [main]
     paths-ignore:
@@ -68,4 +67,4 @@ jobs:
         uses: ./
         with:
           integration-json: '${{ env.integration_json }}'
-          # skip-post-integration: 'true'
+          skip-post-integration: 'true'
