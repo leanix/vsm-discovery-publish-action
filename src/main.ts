@@ -43,7 +43,7 @@ async function run(): Promise<void> {
     if (error instanceof Error) {
       throwErrorAndExit(error.message);
     }
-    throwErrorAndExit(`Error: ${error}`);
+    throwErrorAndExit(`${error}`);
   }
 }
 
