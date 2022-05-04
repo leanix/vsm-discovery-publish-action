@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { SaveIntegrationDto } from './../.openapi-generated/models/save-integration-dto';
 
 export async function createIntegration(regionId: string, integration: SaveIntegrationDto, token: string): Promise<void> {
@@ -9,6 +9,7 @@ export async function createIntegration(regionId: string, integration: SaveInteg
       }
     });
   } catch (error) {
-    throw new Error(`Error creating integration: ${error}`);
+    const axiosError = error as AxiosError;
+    throw new Error(`Error creating integration: ${JSON.stringify(axiosError)}`);
   }
 }

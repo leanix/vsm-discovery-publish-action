@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export async function getMtmToken(regionId: string, clientSecret: string): Promise<string> {
   try {
@@ -18,6 +18,7 @@ export async function getMtmToken(regionId: string, clientSecret: string): Promi
     });
     return token.data.access_token;
   } catch (error) {
-    throw new Error(`Error fetching MTM token: ${error}`);
+    const axiosError = error as AxiosError;
+    throw new Error(`Error fetching MTM token: ${JSON.stringify(axiosError)}`);
   }
 }
