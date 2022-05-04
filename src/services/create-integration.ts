@@ -10,6 +10,6 @@ export async function createIntegration(regionId: string, integration: SaveInteg
     });
   } catch (error) {
     const axiosError = error as AxiosError;
-    throw new Error(`Error posting integration to region ${regionId}: ${axiosError.response?.data}`);
+    throw new Error(`Error posting integration to region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
   }
 }

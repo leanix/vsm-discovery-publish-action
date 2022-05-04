@@ -1,13 +1,13 @@
 {
   "$schema": "../../src/integration.schema.json",
-  "name": "test",
+  "name": "githubrepository",
   "docs": "https://docs-vsm.leanix.net/test",
   "featureFlags": {
     "dependsOn": ["integration.vsm.test"],
     "showInList": "integration.vsm.test.showInList"
   },
   "category": "API",
-  "description": "leanix/validate-integration-action test",
+  "description": "test data for leanix/validate-integration-action",
   "pages": [
     {
       "id": "page1",
