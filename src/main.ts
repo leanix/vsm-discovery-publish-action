@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
-// eslint-disable-next-line import/named
-import { KeyVaultManagementClient, Secret } from '@azure/arm-keyvault';
 import { ClientSecretCredential } from '@azure/identity';
+import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
 import validateIntegration from './integration.validator';
 
 const REGIONS: Readonly<Record<string, string>> = {
@@ -33,16 +32,17 @@ async function run(): Promise<void> {
 async function postIntegrationToAllRegions(): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
     const secret = await getDiscoverySecretForRegion(region, regionId);
-    core.debug(`Received secret for region ${region}: ${JSON.stringify(secret)}`);
+    core.debug(`Received secret for region ${region}: ${secret.value}`);
   }
 }
 
-async function getDiscoverySecretForRegion(region: string, regionId: string): Promise<Secret> {
-  const client = new KeyVaultManagementClient(
-    new ClientSecretCredential(process.env.ARM_TENANT_ID!, process.env.ARM_CLIENT_ID!, process.env.ARM_CLIENT_SECRET!),
-    process.env.ARM_SUBSCRIPTION_ID!
+async function getDiscoverySecretForRegion(region: string, regionId: string): Promise<KeyVaultSecret> {
+  const vaultUrl = `https://lx${region}prod.vault.azure.net`;
+  const client = new SecretClient(
+    vaultUrl,
+    new ClientSecretCredential(process.env.ARM_TENANT_ID!, process.env.ARM_CLIENT_ID!, process.env.ARM_CLIENT_SECRET!)
   );
-  return await client.secrets.get(`keyvault-${region}-aks`, `lx${region}prod`, `vsm-discovery-oauth-secret-${regionId}-svc`);
+  return await client.getSecret(`vsm-discovery-oauth-secret-${regionId}-svc`);
 }
 
 run();
