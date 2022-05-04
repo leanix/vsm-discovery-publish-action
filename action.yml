@@ -5,6 +5,10 @@ inputs:
   integration-json:
     required: true
     description: 'Absolute path to the integration JSON file'
+  skip-post-integration:
+    required: false
+    default: 'false'
+    description: 'Skip posting the integration to LeanIX regions. Useful for testing purposes.'
 runs:
   using: 'node16'
   main: 'dist/index.js'

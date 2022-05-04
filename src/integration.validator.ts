@@ -8,21 +8,12 @@ import { FieldEntity } from './.openapi-generated/models/field-entity';
 import { FieldOptionEntity } from './.openapi-generated/models/field-option-entity';
 import { IntegrationDto } from './.openapi-generated/models/integration-dto';
 
-export default function validateIntegration(integrationJsonPath: string): void {
+export default function validateIntegration(integration: IntegrationDto): void {
   const ajv = new Ajv();
   addFormats(ajv, ['uri']);
 
   const schemaPath = path.join(__dirname, 'integration.schema.json');
   const schema: Record<string, unknown> = fs.readJsonSync(schemaPath);
-  let integrationJson: IntegrationDto;
-
-  try {
-    integrationJson = fs.readJsonSync(integrationJsonPath);
-  } catch (error) {
-    throw new Error(`Error reading integration JSON from path '${integrationJsonPath}'`);
-  }
-
-  const integrationName = integrationJson.name;
 
   // ensure integration.schema.json is a valid JSONSchema
   const validate = ajv.validateSchema(schema);
@@ -32,22 +23,24 @@ export default function validateIntegration(integrationJsonPath: string): void {
 
   // ensure integration is valid according to schema
   const compiledSchema = ajv.compile(schema);
-  const validationResult = compiledSchema(integrationJson);
+  const validationResult = compiledSchema(integration);
 
   if (compiledSchema.errors || !validationResult) {
-    throw new Error(`Integration JSON '${integrationName}' is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`);
+    throw new Error(
+      `Integration JSON '${integration.name}' is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`
+    );
   }
 
   // ensure configuration fields have valid markdown
   // and only existing fields are referenced via `enabled` property
-  const configurationFields = integrationJson.pages.flatMap((page) => page.fields);
+  const configurationFields = integration.pages.flatMap((page) => page.fields);
   for (const configurationField of configurationFields) {
-    assertHasValidMarkdown(configurationField, integrationName);
+    assertHasValidMarkdown(configurationField, integration.name);
 
-    validateChildItems(configurationField, configurationFields, integrationName);
+    validateChildItems(configurationField, configurationFields, integration.name);
 
     for (const option of configurationField.options || []) {
-      validateChildItems(option, configurationFields, integrationName);
+      validateChildItems(option, configurationFields, integration.name);
     }
   }
 

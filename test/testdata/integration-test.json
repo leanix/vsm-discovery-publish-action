@@ -7,7 +7,7 @@
     "showInList": "integration.vsm.test.showInList"
   },
   "category": "API",
-  "description": "integration test",
+  "description": "leanix/validate-integration-action test",
   "pages": [
     {
       "id": "page1",

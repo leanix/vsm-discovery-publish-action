@@ -66,3 +66,4 @@ jobs:
       - uses: ./
         with:
           integration-json: '${{ env.integration_json }}'
+          # skip-post-integration: 'true'
