@@ -22,7 +22,7 @@ async function run(): Promise<void> {
   }
   try {
     validateIntegration(integrationJsonPath);
-    await postToRegions();
+    await postIntegrationToAllRegions();
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
@@ -30,14 +30,14 @@ async function run(): Promise<void> {
   }
 }
 
-async function postToRegions(): Promise<void> {
+async function postIntegrationToAllRegions(): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
-    const token = await getDiscoveryToken(region, regionId);
-    core.debug(`Received token for region ${region}: ${token.properties.value}`);
+    const secret = await getDiscoverySecretForRegion(region, regionId);
+    core.debug(`Received secret for region ${region}: ${JSON.stringify(secret)}`);
   }
 }
 
-async function getDiscoveryToken(region: string, regionId: string): Promise<Secret> {
+async function getDiscoverySecretForRegion(region: string, regionId: string): Promise<Secret> {
   const client = new KeyVaultManagementClient(
     new ClientSecretCredential(process.env.ARM_TENANT_ID!, process.env.ARM_CLIENT_ID!, process.env.ARM_CLIENT_SECRET!),
     process.env.ARM_SUBSCRIPTION_ID!
