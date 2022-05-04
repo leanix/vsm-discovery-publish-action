@@ -19,6 +19,6 @@ export async function getMtmToken(regionId: string, clientSecret: string): Promi
     return token.data.access_token;
   } catch (error) {
     const axiosError = error as AxiosError;
-    throw new Error(`Error fetching MTM token: ${JSON.stringify(axiosError)}`);
+    throw new Error(`Error fetching MTM token for region ${regionId}: ${axiosError.response?.data}`);
   }
 }
