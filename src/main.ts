@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
+import fs from 'fs-extra';
 import { IntegrationDto } from './.openapi-generated/models/integration-dto';
 import validateIntegration from './integration.validator';
 import { createIntegration } from './services/create-integration';
