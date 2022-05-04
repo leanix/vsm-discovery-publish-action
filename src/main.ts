@@ -57,7 +57,7 @@ async function postIntegrationToAllRegions(integration: IntegrationDto): Promise
     const token = await getMtmToken(regionId, secret.value!);
     await createIntegration(regionId, integration, token);
 
-    core.info(`Integration created successfully on region ${region}`);
+    core.info(`Integration posted successfully to region ${region}`);
   }
 }
 
