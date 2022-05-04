@@ -28,7 +28,7 @@ async function run(): Promise<void> {
   try {
     integration = fs.readJsonSync(integrationJsonPath);
   } catch (error) {
-    throw new Error(`Error reading integration JSON from path '${integrationJsonPath}'`);
+    throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
   }
 
   try {
