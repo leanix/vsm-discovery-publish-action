@@ -54,9 +54,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - run: |
+      - name: 'Store integration-test.json in env variable'
+        run: |
           INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
           echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
-      - uses: ./
+      - name: 'Test action'
+        uses: ./
         with:
           integration-json: '${{ env.integration_json }}'
+          skip-post-integration: 'true'
