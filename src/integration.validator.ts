@@ -4,11 +4,11 @@ import fs from 'fs-extra';
 import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import path from 'path';
-import { FieldEntity } from './.openapi-generated/models/field-entity';
-import { FieldOptionEntity } from './.openapi-generated/models/field-option-entity';
-import { IntegrationDto } from './.openapi-generated/models/integration-dto';
+import { FieldOptionSchemaEntity } from './.openapi-generated/models/field-option-schema-entity';
+import { FieldSchemaRequestDto } from './.openapi-generated/models/field-schema-request-dto';
+import { IntegrationRequestDto } from './.openapi-generated/models/integration-request-dto';
 
-export default function validateIntegration(integration: IntegrationDto): void {
+export default function validateIntegration(integration: IntegrationRequestDto): void {
   const ajv = new Ajv();
   addFormats(ajv, ['uri']);
 
@@ -27,13 +27,15 @@ export default function validateIntegration(integration: IntegrationDto): void {
 
   if (compiledSchema.errors || !validationResult) {
     throw new Error(
-      `Integration JSON '${integration.name}' is not a valid implementation of the schema. Errors:\n${compiledSchema.errors}`
+      `Integration JSON '${integration.name}' is not a valid implementation of the schema. Errors:\n${JSON.stringify(
+        compiledSchema.errors
+      )}`
     );
   }
 
   // ensure configuration fields have valid markdown
   // and only existing fields are referenced via `enabled` property
-  const configurationFields = integration.pages.flatMap((page) => page.fields);
+  const configurationFields = integration.pageSchemas.flatMap((page) => page.fields);
   for (const configurationField of configurationFields) {
     assertHasValidMarkdown(configurationField, integration.name);
 
@@ -47,7 +49,7 @@ export default function validateIntegration(integration: IntegrationDto): void {
   // TODO validate code snippet variables as soon as they are defined in schema
 }
 
-function assertHasValidMarkdown(integrationField: FieldEntity, integrationName: string) {
+function assertHasValidMarkdown(integrationField: FieldSchemaRequestDto, integrationName: string) {
   const { document } = new JSDOM(`...`).window;
 
   // eslint-disable-next-line github/array-foreach
@@ -89,7 +91,11 @@ function assertHasValidMarkdown(integrationField: FieldEntity, integrationName: 
   });
 }
 
-function validateChildItems(item: FieldEntity | FieldOptionEntity, allFields: FieldEntity[], integrationId: string) {
+function validateChildItems(
+  item: FieldSchemaRequestDto | FieldOptionSchemaEntity,
+  allFields: FieldSchemaRequestDto[],
+  integrationId: string
+) {
   const invalidChildFields = item.enables?.filter((childItemId) => !allFields.find((field) => field.id === childItemId));
 
   for (const childItemId of invalidChildFields || []) {
