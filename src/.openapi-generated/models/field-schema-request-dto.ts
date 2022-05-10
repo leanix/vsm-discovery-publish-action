@@ -1,17 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
-import { FieldOptionEntity } from './field-option-entity';
-export interface FieldEntity {
-  defaultValue?: {
-};
+import { FieldOptionSchemaEntity } from './field-option-schema-entity';
+
+/**
+ * Model used to save the definition of a field in an integration page.
+ */
+export interface FieldSchemaRequestDto {
   enables?: Array<string>;
   helpText?: string;
   hintBox?: string;
   id: string;
   label: string;
-  options?: Array<FieldOptionEntity>;
+  options?: Array<FieldOptionSchemaEntity>;
   placeholder?: string;
   required?: boolean;
   snippet?: string;
   type: 'BOOLEAN' | 'CODE_SNIPPET' | 'EMAIL' | 'JSON' | 'NUMBER' | 'PASSWORD' | 'RADIO' | 'SCHEDULE' | 'STRING_ARRAY' | 'TEXT';
+  value?: {
+};
 }

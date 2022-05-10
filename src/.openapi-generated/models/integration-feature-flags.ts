@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface FeatureFlags {
+export interface IntegrationFeatureFlags {
   dependsOn?: Array<string>;
   showInList: string;
 }
