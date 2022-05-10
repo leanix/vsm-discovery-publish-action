@@ -3,7 +3,7 @@ import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
 import fs from 'fs-extra';
-import { IntegrationDto } from './.openapi-generated/models/integration-dto';
+import { IntegrationRequestDto } from './.openapi-generated/models/integration-request-dto';
 import validateIntegration from './integration.validator';
 import { createIntegration } from './services/create-integration';
 import { getMtmToken } from './services/get-mtm-token';
@@ -20,7 +20,7 @@ const REGIONS: Readonly<Record<string, string>> = {
 async function run(): Promise<void> {
   const integrationJsonPath = core.getInput('integration-json');
   const skipPostIntegration = core.getInput('skip-post-integration');
-  let integration: IntegrationDto;
+  let integration: IntegrationRequestDto;
 
   if (!integrationJsonPath) {
     throwErrorAndExit('Please provide a path to the integration JSON file');
@@ -47,7 +47,7 @@ async function run(): Promise<void> {
   }
 }
 
-async function postIntegrationToAllRegions(integration: IntegrationDto): Promise<void> {
+async function postIntegrationToAllRegions(integration: IntegrationRequestDto): Promise<void> {
   for (const [region, regionId] of Object.entries(REGIONS)) {
     const secret = await getClientSecretForRegion(region, regionId);
     if (!secret.value) {

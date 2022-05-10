@@ -8,15 +8,15 @@
   },
   "category": "API",
   "description": "test data for leanix/validate-integration-action",
-  "pages": [
+  "pageSchemas": [
     {
       "id": "page1",
       "label": "Page 1",
       "fields": [
         {
           "id": "field1",
-          "type": "radio",
-          "defaultValue": "default",
+          "type": "RADIO",
+          "value": "default",
           "helpText": "field1 help",
           "hintBox": "### HINT field1 hint",
           "label": "field1 label",
@@ -34,8 +34,8 @@
         },
         {
           "id": "field2",
-          "type": "boolean",
-          "defaultValue": "default",
+          "type": "BOOLEAN",
+          "value": "default",
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
@@ -43,7 +43,7 @@
         },
         {
           "id": "field3",
-          "type": "text",
+          "type": "TEXT",
           "label": "field3 label"
         }
       ]

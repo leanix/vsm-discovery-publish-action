@@ -1,6 +1,6 @@
 {
   "$id": "https://vsm.integration.schema.json",
-  "title": "vsm.integrations.schema",
+  "title": "Integration",
   "description": "Definition of an integration",
   "type": "object",
   "additionalProperties": false,
@@ -51,11 +51,7 @@
       },
       "required": ["showInList"]
     },
-    "configurationNameHelpText": {
-      "type": "string",
-      "description": "Defines a help text for the 'built-in' configuration name text field (this is optional)."
-    },
-    "pages": {
+    "pageSchemas": {
       "type": "array",
       "description": "Each item represents a configuration page, generating a 'breadcrumb navigation' where the pages are sorted according to their order of definition.",
       "minItems": 1,
@@ -86,14 +82,14 @@
                 },
                 "type": {
                   "type": "string",
-                  "enum": ["boolean", "code-snippet", "email", "json", "number", "password", "radio", "schedule", "string-array", "text"]
+                  "enum": ["BOOLEAN", "CODE_SNIPPET", "EMAIL", "JSOM", "NUMBER", "PASSWORD", "RADIO", "SCHEDULE", "STRING_ARRAY", "TEXT"]
                 },
                 "placeholder": {
                   "type": "string",
                   "description": "Placeholder to show inside input fields"
                 },
-                "defaultValue": {
-                  "description": "Default value of the field. Also used as 'template' for code snippets."
+                "value": {
+                  "description": "Value of the field. If set, will be used as the default value for the field."
                 },
                 "required": {
                   "type": "boolean",
@@ -125,7 +121,7 @@
                     "not": {
                       "properties": {
                         "type": {
-                          "const": "boolean"
+                          "const": "BOOLEAN"
                         }
                       }
                     }
@@ -140,7 +136,7 @@
                   "if": {
                     "properties": {
                       "type": {
-                        "const": "radio"
+                        "const": "RADIO"
                       }
                     }
                   },
@@ -157,7 +153,7 @@
                   "if": {
                     "properties": {
                       "type": {
-                        "enum": ["boolean", "code-snippet", "json", "radio", "schedule", "string-array"]
+                        "enum": ["BOOLEAN", "CODE_SNIPPET", "JSON", "RADIO", "SCHEDULE", "STRING_ARRAY"]
                       }
                     }
                   },
@@ -171,7 +167,7 @@
                   "if": {
                     "properties": {
                       "type": {
-                        "const": "code-snippet"
+                        "const": "CODE_SNIPPET"
                       }
                     }
                   },
@@ -188,7 +184,7 @@
                   "if": {
                     "properties": {
                       "type": {
-                        "const": "schedule"
+                        "const": "SCHEDULE"
                       }
                     }
                   },
@@ -238,5 +234,5 @@
       }
     }
   },
-  "required": ["$schema", "name", "description", "category", "docs", "featureFlags", "pages"]
+  "required": ["$schema", "name", "description", "category", "docs", "featureFlags", "pageSchemas"]
 }
