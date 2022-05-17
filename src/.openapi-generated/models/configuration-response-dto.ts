@@ -9,5 +9,5 @@ export interface ConfigurationResponseDto {
   id: string;
   integrationId: string;
   name: string;
-  pages?: Array<PageResponseDto>;
+  pages: Array<PageResponseDto>;
 }
