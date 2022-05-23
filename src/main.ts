@@ -3,7 +3,7 @@ import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
 import fs from 'fs-extra';
-import { IntegrationRequestDto } from './.openapi-generated/models/integration-request-dto';
+import { IntegrationRequestDto } from './models/integration-request-dto';
 import validateIntegration from './integration.validator';
 import { createIntegration } from './services/create-integration';
 import { getMtmToken } from './services/get-mtm-token';

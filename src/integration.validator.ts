@@ -5,8 +5,8 @@ import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import path from 'path';
 import { FieldOptionSchemaEntity } from './.openapi-generated/models/field-option-schema-entity';
-import { FieldSchemaRequestDto } from './.openapi-generated/models/field-schema-request-dto';
-import { IntegrationRequestDto } from './.openapi-generated/models/integration-request-dto';
+import { FieldSchemaRequestDto } from './models/field-schema-request-dto';
+import { IntegrationRequestDto } from './models/integration-request-dto';
 
 export default function validateIntegration(integration: IntegrationRequestDto): void {
   const ajv = new Ajv();
