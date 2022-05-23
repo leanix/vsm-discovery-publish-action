@@ -4,7 +4,7 @@ import { ClientSecretCredential } from '@azure/identity';
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
 import fs from 'fs-extra';
 import { IntegrationRequestDto } from './models/integration-request-dto';
-import validateIntegration from './integration.validator';
+import IntegrationValidator from './integration.validator';
 import { IntegrationClient } from './client/integration.client';
 import { getMtmToken } from './client/mtm.client';
 
