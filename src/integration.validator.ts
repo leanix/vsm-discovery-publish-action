@@ -10,20 +10,20 @@ import { IntegrationClient } from './client/integration.client';
 export default class IntegrationValidator {
   private integrationClient = new IntegrationClient();
 
-  validate(integration: IntegrationRequestDto): void {
+  async validate(integration: IntegrationRequestDto, schema?: Record<string, unknown>): Promise<void> {
     const ajv = new Ajv();
     addFormats(ajv, ['uri']);
 
-    const schema = this.integrationClient.fetchIntegrationSchema();
+    const integrationSchema = schema || (await this.integrationClient.fetchIntegrationSchema());
 
     // ensure integration.schema.json is a valid JSONSchema
-    const validate = ajv.validateSchema(schema);
+    const validate = ajv.validateSchema(integrationSchema);
     if (!validate || ajv.errors) {
       throw new Error('Integration JSON schema is not valid!');
     }
 
     // ensure integration is valid according to schema
-    const compiledSchema = ajv.compile(schema);
+    const compiledSchema = ajv.compile(integrationSchema);
     const validationResult = compiledSchema(integration);
 
     if (compiledSchema.errors || !validationResult) {

@@ -35,7 +35,7 @@ async function run(): Promise<void> {
   }
 
   try {
-    integrationValidator.validate(integration);
+    await integrationValidator.validate(integration);
     core.info('Integration is valid');
 
     if (dryRun !== 'true') {
@@ -79,4 +79,4 @@ function throwErrorAndExit(message: string) {
   process.exit(1);
 }
 
-run();
+void run();
