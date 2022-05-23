@@ -100,7 +100,7 @@ export default class IntegrationValidator {
     const invalidChildFields = item.enables?.filter((childItemId) => !allFields.find((field) => field.id === childItemId));
 
     for (const childItemId of invalidChildFields || []) {
-      throw new Error(`[${integrationId}] Specified chield field of '${item.id}' with id '${childItemId}' does not exist`);
+      throw new Error(`[${integrationId}] Specified child field of '${item.id}' with id '${childItemId}' does not exist`);
     }
   }
 }

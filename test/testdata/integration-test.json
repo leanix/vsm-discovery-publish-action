@@ -5,7 +5,8 @@
   "featureFlags": {
     "dependsOn": [
       {
-        "featureId": "integration.vsm.test"
+        "featureId": "integration.vsm.test",
+        "controlledBy": "field2"
       }
     ],
     "showInList": "integration.vsm.test.showInList"
