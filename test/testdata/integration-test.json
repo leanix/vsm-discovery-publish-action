@@ -1,5 +1,5 @@
 {
-  "$schema": "../../src/integration.schema.json",
+  "$schema": "./integration.schema.json",
   "name": "githubrepository",
   "docs": "https://docs-vsm.leanix.net/test",
   "featureFlags": {

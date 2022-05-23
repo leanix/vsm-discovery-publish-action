@@ -16,7 +16,7 @@ export default class IntegrationValidator {
 
     const integrationSchema = schema || (await this.integrationClient.fetchIntegrationSchema());
 
-    // ensure integration.schema.json is a valid JSONSchema
+    // ensure integration schema is a valid JSONSchema
     const validate = ajv.validateSchema(integrationSchema);
     if (!validate || ajv.errors) {
       throw new Error('Integration JSON schema is not valid!');
