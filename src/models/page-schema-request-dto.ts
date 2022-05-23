@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 import { FieldSchemaRequestDto } from './field-schema-request-dto';
 
 /**

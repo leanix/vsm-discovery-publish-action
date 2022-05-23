@@ -1,6 +1,4 @@
-/* tslint:disable */
-/* eslint-disable */
-import { IntegrationFeatureFlags } from './integration-feature-flags';
+import { IntegrationFeatureFlags } from '../.openapi-generated/models/integration-feature-flags';
 import { PageSchemaRequestDto } from './page-schema-request-dto';
 
 /**

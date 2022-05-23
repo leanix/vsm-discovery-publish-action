@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { IntegrationRequestDto } from './../.openapi-generated/models/integration-request-dto';
+import { IntegrationRequestDto } from '../models/integration-request-dto';
 
 export async function createIntegration(regionId: string, integration: IntegrationRequestDto, token: string): Promise<void> {
   try {
