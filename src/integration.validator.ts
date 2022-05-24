@@ -2,6 +2,7 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
+import { DependentFeatureFlag } from './.openapi-generated/models/dependent-feature-flag';
 import { FieldOptionSchemaEntity } from './.openapi-generated/models/field-option-schema-entity';
 import { IntegrationClient } from './client/integration.client';
 import { FieldSchemaRequestDto } from './models/field-schema-request-dto';
@@ -37,9 +38,12 @@ export default class IntegrationValidator {
       );
     }
 
+    const configurationFields = integration.pageSchemas.flatMap((page) => page.fields);
+
+    validateFeatureFlagsControlledByFields(integration.featureFlags.dependsOn || [], configurationFields, integration.name);
+
     // ensure configuration fields have valid markdown
     // and only existing fields are referenced via `enabled` property
-    const configurationFields = integration.pageSchemas.flatMap((page) => page.fields);
     for (const configurationField of configurationFields) {
       this.assertHasValidMarkdown(configurationField, integration.name);
 
@@ -104,6 +108,30 @@ export default class IntegrationValidator {
 
     for (const childItemId of invalidChildFields || []) {
       throw new Error(`[${integrationId}] Specified child field of '${item.id}' with id '${childItemId}' does not exist`);
+    }
+  }
+}
+
+function validateFeatureFlagsControlledByFields(
+  dependentFeatureFlags: DependentFeatureFlag[],
+  configurationFields: FieldSchemaRequestDto[],
+  integrationName: string
+) {
+  const controlledByFeatureFlags = dependentFeatureFlags.filter((dependentFeatureFlag) => dependentFeatureFlag.controlledBy);
+
+  for (const controlledByFeatureFlag of controlledByFeatureFlags) {
+    const field = configurationFields.find((fieldSchema) => fieldSchema.id === controlledByFeatureFlag.controlledBy);
+
+    if (field === undefined) {
+      throw new Error(
+        `[${integrationName}] The dependent field for '${controlledByFeatureFlag.featureId}' with id '${controlledByFeatureFlag.controlledBy}' does not exist`
+      );
+    }
+
+    if (field.type !== 'BOOLEAN') {
+      throw new Error(
+        `[${integrationName}] The dependent field for '${controlledByFeatureFlag.featureId}' with id '${controlledByFeatureFlag.controlledBy}' is of type '${field.type}'. Dependent fields must be of type 'BOOLEAN'.`
+      );
     }
   }
 }
