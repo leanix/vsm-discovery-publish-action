@@ -3,9 +3,9 @@ import addFormats from 'ajv-formats';
 import { JSDOM } from 'jsdom';
 import { marked } from 'marked';
 import { FieldOptionSchemaEntity } from './.openapi-generated/models/field-option-schema-entity';
+import { IntegrationClient } from './client/integration.client';
 import { FieldSchemaRequestDto } from './models/field-schema-request-dto';
 import { IntegrationRequestDto } from './models/integration-request-dto';
-import { IntegrationClient } from './client/integration.client';
 
 export default class IntegrationValidator {
   private integrationClient = new IntegrationClient();
@@ -15,6 +15,9 @@ export default class IntegrationValidator {
     addFormats(ajv, ['uri']);
 
     const integrationSchema = schema || (await this.integrationClient.fetchIntegrationSchema());
+
+    // eslint-disable-next-line no-console
+    console.info('Validating integration against provided schema:', integrationSchema);
 
     // ensure integration schema is a valid JSONSchema
     const isValid = ajv.validateSchema(integrationSchema);
