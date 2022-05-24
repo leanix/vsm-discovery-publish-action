@@ -16,10 +16,14 @@ export class IntegrationClient {
   }
 
   async fetchIntegrationSchema(): Promise<Record<string, unknown>> {
+    let response;
     try {
-      return await axios.get(`https://eu.leanix.net/services/vsm-discovery/v1/specs/integrations/integration.schema.json`);
+      response = await axios.get<Record<string, unknown>>(
+        `https://eu.leanix.net/services/vsm-discovery/v1/specs/integrations/integration.schema.json`
+      );
     } catch (error) {
       throw new Error(`Error fetching the integration schema`);
     }
+    return response.data;
   }
 }
