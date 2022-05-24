@@ -1,9 +1,14 @@
 {
-  "$schema": "../../src/integration.schema.json",
+  "$schema": "./integration.schema.json",
   "name": "githubrepository",
   "docs": "https://docs-vsm.leanix.net/test",
   "featureFlags": {
-    "dependsOn": ["integration.vsm.test"],
+    "dependsOn": [
+      {
+        "featureId": "integration.vsm.test",
+        "controlledBy": "field2"
+      }
+    ],
     "showInList": "integration.vsm.test.showInList"
   },
   "category": "API",
@@ -23,7 +28,9 @@
           "options": [
             {
               "id": "option1",
-              "enables": ["field2"],
+              "enables": [
+                "field2"
+              ],
               "label": "Option 1"
             },
             {
@@ -39,7 +46,9 @@
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
-          "enables": ["field3"]
+          "enables": [
+            "field3"
+          ]
         },
         {
           "id": "field3",

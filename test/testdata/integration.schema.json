@@ -1,0 +1,310 @@
+{
+  "$id": "https://vsm.integration.schema.json",
+  "title": "Integration",
+  "description": "Definition of an integration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "pattern": "integration\\.schema\\.json",
+      "description": "Path to the JSON schema. Must match `integration.schema.json`."
+    },
+    "name": {
+      "type": "string",
+      "description": "Used to uniquely identify the integration"
+    },
+    "description": {
+      "type": "string",
+      "description": "Summary of the integration capabilities and use-cases"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "API",
+        "COLLABORATION",
+        "COMPLIANCE",
+        "DEVELOPMENT",
+        "RUNTIME"
+      ],
+      "description": "Used to regroup similar integration into bucket and facilitate filtering"
+    },
+    "docs": {
+      "type": "string",
+      "format": "uri",
+      "description": "Link to the customer documentation of the integration (e.g., https://docs-vsm.leanix.net/{integration-name}).",
+      "default": "https://docs-vsm.leanix.net/{integration-name}"
+    },
+    "featureFlags": {
+      "type": "object",
+      "description": "Activate the given feature flags",
+      "additionalProperties": false,
+      "properties": {
+        "showInList": {
+          "type": "string",
+          "pattern": "integration\\.vsm\\.(.)+\\.showInList",
+          "description": "Name of the feature flag that controls whether the integration should be shown or not in the workspace.",
+          "default": "integration.vsm.{integration-name}.showInList"
+        },
+        "dependsOn": {
+          "type": "array",
+          "minItems": 1,
+          "description": "List of additional feature flags that this integration depends on.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "featureId": {
+                "type": "string",
+                "description": "The feature flag to enable as a dependency."
+              },
+              "controlledBy": {
+                "type": "string",
+                "description": "optional field ID controlling whether the feature flag needs to be enabled or not (the field MUST be of type boolean)."
+              }
+            },
+            "required": [
+              "featureId"
+            ]
+          }
+        }
+      },
+      "required": [
+        "showInList"
+      ]
+    },
+    "pageSchemas": {
+      "type": "array",
+      "description": "Each item represents a configuration page, generating a 'breadcrumb navigation' where the pages are sorted according to their order of definition.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "description": "Name of the page shown in the breadcrumb"
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Each field is rendered on its respective page, where fields are sorted according to their order of definition.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string",
+                  "description": "The name of the field"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "BOOLEAN",
+                    "CODE_SNIPPET",
+                    "EMAIL",
+                    "JSON",
+                    "NUMBER",
+                    "PASSWORD",
+                    "RADIO",
+                    "SCHEDULE",
+                    "STRING_ARRAY",
+                    "TEXT"
+                  ]
+                },
+                "placeholder": {
+                  "type": "string",
+                  "description": "Placeholder to show inside input fields"
+                },
+                "value": {
+                  "description": "Value of the field. If set, will be used as the default value for the field."
+                },
+                "required": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether the field is required or not"
+                },
+                "helpText": {
+                  "type": "string",
+                  "description": "Help text shown under the label of the field"
+                },
+                "hintBox": {
+                  "type": "string",
+                  "description": "Rich markdown box that can be opened through the (?) at the end of the field name."
+                },
+                "options": {
+                  "$ref": "#/definitions/options"
+                },
+                "snippet": {
+                  "type": "string",
+                  "description": "Used by code-snippet fields to define the text to render within the code block"
+                },
+                "enables": {
+                  "$ref": "#/definitions/enables"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "not": {
+                      "properties": {
+                        "type": {
+                          "const": "BOOLEAN"
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "not": {
+                      "required": [
+                        "enables"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "RADIO"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "options"
+                    ]
+                  },
+                  "else": {
+                    "not": {
+                      "required": [
+                        "options"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "BOOLEAN",
+                          "CODE_SNIPPET",
+                          "JSON",
+                          "RADIO",
+                          "SCHEDULE",
+                          "STRING_ARRAY"
+                        ]
+                      }
+                    }
+                  },
+                  "then": {
+                    "not": {
+                      "required": [
+                        "placeholder"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "CODE_SNIPPET"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "snippet"
+                    ]
+                  },
+                  "else": {
+                    "not": {
+                      "required": [
+                        "snippet"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "SCHEDULE"
+                      }
+                    }
+                  },
+                  "then": {
+                    "not": {
+                      "required": [
+                        "required"
+                      ]
+                    }
+                  }
+                }
+              ],
+              "required": [
+                "id",
+                "label",
+                "type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "fields"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "enables": {
+      "type": "array",
+      "description": "List of ids of children fields to show when the option is selected",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "options": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "description": "Displayed name of the option"
+          },
+          "enables": {
+            "$ref": "#/definitions/enables"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "$schema",
+    "name",
+    "description",
+    "category",
+    "docs",
+    "featureFlags",
+    "pageSchemas"
+  ]
+}
