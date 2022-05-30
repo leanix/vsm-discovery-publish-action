@@ -28,9 +28,7 @@
           "options": [
             {
               "id": "option1",
-              "enables": [
-                "field2"
-              ],
+              "enables": ["field2"],
               "label": "Option 1"
             },
             {
@@ -46,14 +44,18 @@
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
-          "enables": [
-            "field3"
-          ]
+          "enables": ["field3"]
         },
         {
           "id": "field3",
           "type": "TEXT",
           "label": "field3 label"
+        },
+        {
+          "id": "snippet",
+          "type": "CODE_SNIPPET",
+          "label": "snippet",
+          "snippet": "field3: $field3, workspaceId: $workspaceId"
         }
       ]
     }
