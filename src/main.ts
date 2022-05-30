@@ -3,10 +3,10 @@ import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
 import fs from 'fs-extra';
-import { IntegrationRequestDto } from './models/integration-request-dto';
-import IntegrationValidator from './integration.validator';
 import { IntegrationClient } from './client/integration.client';
 import { getMtmToken } from './client/mtm.client';
+import { IntegrationRequestDto } from './models/integration-request-dto';
+import IntegrationValidator from './validators/integration.validator';
 
 const REGIONS: Readonly<Record<string, string>> = {
   westeurope: 'eu',

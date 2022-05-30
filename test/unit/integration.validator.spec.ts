@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals';
 import fs from 'fs-extra';
 import path from 'path';
-import IntegrationValidator from '../../src/integration.validator';
+import IntegrationValidator from '../../src/validators/integration.validator';
 
 test('validate integration', async () => {
   const integrationJson = fs.readJsonSync(path.join(__dirname, '../testdata/integration-test.json'));
