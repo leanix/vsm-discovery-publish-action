@@ -2,6 +2,7 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { IntegrationClient } from '../client/integration.client';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
+import { validateCodeSnippetPlaceholders } from './code-snippet.validator';
 import { validateEnabledChildItems, validateFeatureFlagsControlledByFields } from './configuration-field.validator';
 import { validateMarkdown } from './markdown.validator';
 
@@ -12,7 +13,14 @@ export default class IntegrationValidator {
     this.integrationClient = new IntegrationClient();
   }
 
-  async validate(integration: IntegrationRequestDto, schema?: Record<string, unknown>): Promise<void> {
+  /**
+   * Validates a given integration JSON
+   * @param integration The integration JSON
+   * @param schema (optional) Schema to validate the integration against
+   * @returns A `Promise` indicating if the integration is valid.
+   * If it is invalid, a validation error is thrown.
+   */
+  async validate(integration: IntegrationRequestDto, schema?: Record<string, unknown>): Promise<boolean> {
     const ajv = new Ajv();
     addFormats(ajv, ['uri']);
 
@@ -47,10 +55,14 @@ export default class IntegrationValidator {
       validateMarkdown(configurationField, integration.name);
 
       validateEnabledChildItems(configurationField, configurationFields, integration.name);
-
       for (const option of configurationField.options || []) {
         validateEnabledChildItems(option, configurationFields, integration.name);
       }
+
+      if (configurationField.type === 'CODE_SNIPPET') {
+        validateCodeSnippetPlaceholders(configurationField, configurationFields);
+      }
     }
+    return true;
   }
 }

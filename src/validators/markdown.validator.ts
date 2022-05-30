@@ -40,7 +40,7 @@ export function validateMarkdown(integrationField: FieldSchemaRequestDto, integr
       }
     }
 
-    if (index === 0 && !document.body.firstElementChild!.tagName.startsWith('H')) {
+    if (index === 1 && !document.body.firstElementChild!.tagName.startsWith('H')) {
       throw new Error(`[${integrationName}] Hint text markdown for '${integrationField.id}' does not start with a heading`);
     }
   });
