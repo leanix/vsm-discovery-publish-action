@@ -60,7 +60,7 @@ export default class IntegrationValidator {
       }
 
       if (configurationField.type === 'CODE_SNIPPET') {
-        validateCodeSnippetPlaceholders(configurationField, configurationFields);
+        validateCodeSnippetPlaceholders(configurationField, configurationFields, integration.name);
       }
     }
     return true;
