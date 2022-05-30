@@ -8,7 +8,6 @@ import { FieldSchemaRequestDto } from '../models/field-schema-request-dto';
 export function validateMarkdown(integrationField: FieldSchemaRequestDto, integrationName: string) {
   const { document } = new JSDOM(`...`).window;
 
-  // eslint-disable-next-line github/array-foreach
   [integrationField.snippet, integrationField.hintBox].forEach((markdown, index) => {
     if (!markdown) {
       return;
