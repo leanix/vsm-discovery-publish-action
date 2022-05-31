@@ -46,7 +46,7 @@ describe('integration validation', () => {
         label: 'invalid_json',
         value: 'hi'
       });
-      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError('is not a valid JSON');
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError('must match the type JSON');
     });
     it('should show an error for invalid default values of number fields', async () => {
       const invalidIntegration = cloneDeep(integrationJson);

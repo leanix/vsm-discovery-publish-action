@@ -24,7 +24,9 @@ export function validateConfigurationFields(integration: IntegrationRequestDto) 
     }
     if (field.value && !validateDefaultValue(field, integration.name)) {
       throw new Error(
-        `[${integration.name}] Default value of field '${field.id}' must match the type ${field.type}. Current default value is '${field.value}' and does not match this type.`
+        `[${integration.name}] Default value of field '${field.id}' must match the type ${field.type}. Current default value is '${
+          field.value
+        }' and is of type '${typeof field.value}'.`
       );
     }
   }
@@ -63,16 +65,11 @@ function validateFeatureFlagsControlledByFields(
 function validateDefaultValue(field: FieldSchemaRequestDto, integrationName: string) {
   switch (field.type) {
     case 'BOOLEAN':
-      return field.value === 'true' || field.value === 'false';
+      return typeof field.value === 'boolean';
     case 'JSON':
-      try {
-        JSON.parse(field.value);
-      } catch (error) {
-        throw new Error(`[${integrationName}] The default value of JSON field '${field.id}' is not a valid JSON.`);
-      }
-      return typeof JSON.parse(field.value) === 'object';
+      return typeof field.value === 'object';
     case 'NUMBER':
-      return !isNaN(Number(field.value));
+      return typeof field.value === 'number';
     case 'RADIO':
       if (!field.options!.find((option) => option.id === field.value)) {
         throw new Error(
@@ -83,7 +80,7 @@ function validateDefaultValue(field: FieldSchemaRequestDto, integrationName: str
       }
       return true;
     case 'STRING_ARRAY':
-      return Array.isArray(JSON.parse(field.value));
+      return Array.isArray(field.value);
     default:
       return true;
   }

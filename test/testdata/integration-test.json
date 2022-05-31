@@ -40,7 +40,7 @@
         {
           "id": "field2",
           "type": "BOOLEAN",
-          "value": "true",
+          "value": true,
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
@@ -67,19 +67,19 @@
           "id": "json",
           "type": "JSON",
           "label": "snippet",
-          "value": "{\"hi\": \"there\"}"
+          "value": { "hi": "there" }
         },
         {
           "id": "string-array",
           "type": "STRING_ARRAY",
           "label": "string-array",
-          "value": "[\"a\", \"b\", \"c\"]"
+          "value": ["a", "b", "c"]
         },
         {
           "id": "number",
           "type": "NUMBER",
           "label": "number",
-          "value": "-123"
+          "value": -123
         }
       ]
     }
