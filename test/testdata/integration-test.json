@@ -21,7 +21,7 @@
         {
           "id": "field1",
           "type": "RADIO",
-          "value": "default",
+          "value": "option1",
           "helpText": "field1 help",
           "hintBox": "### HINT field1 hint",
           "label": "field1 label",
@@ -40,7 +40,7 @@
         {
           "id": "field2",
           "type": "BOOLEAN",
-          "value": "default",
+          "value": "true",
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
@@ -50,12 +50,36 @@
           "id": "field3",
           "type": "TEXT",
           "label": "field3 label"
-        },
+        }
+      ]
+    },
+    {
+      "id": "page2",
+      "label": "page2",
+      "fields": [
         {
           "id": "snippet",
           "type": "CODE_SNIPPET",
           "label": "snippet",
           "snippet": "field3: $field3, workspaceId: $workspaceId"
+        },
+        {
+          "id": "json",
+          "type": "JSON",
+          "label": "snippet",
+          "value": "{\"hi\": \"there\"}"
+        },
+        {
+          "id": "string-array",
+          "type": "STRING_ARRAY",
+          "label": "string-array",
+          "value": "[\"a\", \"b\", \"c\"]"
+        },
+        {
+          "id": "number",
+          "type": "NUMBER",
+          "label": "number",
+          "value": "-123"
         }
       ]
     }

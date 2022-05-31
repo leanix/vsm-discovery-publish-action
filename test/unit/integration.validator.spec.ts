@@ -24,4 +24,58 @@ describe('integration validation', () => {
     });
     await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toBeDefined();
   });
+
+  describe('default values', () => {
+    it('should show an error for invalid default values of boolean fields', async () => {
+      const invalidIntegration = cloneDeep(integrationJson);
+      invalidIntegration.pageSchemas[0].fields.push({
+        id: 'invalid_boolean',
+        type: 'BOOLEAN',
+        label: 'invalid_boolean',
+        value: 'hi'
+      });
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError(
+        'must match the type BOOLEAN'
+      );
+    });
+    it('should show an error for invalid default values of json fields', async () => {
+      const invalidIntegration = cloneDeep(integrationJson);
+      invalidIntegration.pageSchemas[0].fields.push({
+        id: 'invalid_json',
+        type: 'JSON',
+        label: 'invalid_json',
+        value: 'hi'
+      });
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError('is not a valid JSON');
+    });
+    it('should show an error for invalid default values of number fields', async () => {
+      const invalidIntegration = cloneDeep(integrationJson);
+      invalidIntegration.pageSchemas[0].fields.push({
+        id: 'invalid_number',
+        type: 'NUMBER',
+        label: 'invalid_number',
+        value: 'hi'
+      });
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError('must match the type NUMBER');
+    });
+    it('should show an error for invalid default values of radio fields', async () => {
+      const invalidIntegration = cloneDeep(integrationJson);
+      invalidIntegration.pageSchemas[0].fields[0].value = 'ups';
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError(
+        'not an allowed field option'
+      );
+    });
+    it('should show an error for invalid default values of string array fields', async () => {
+      const invalidIntegration = cloneDeep(integrationJson);
+      invalidIntegration.pageSchemas[0].fields.push({
+        id: 'invalid_string_array',
+        type: 'STRING_ARRAY',
+        label: 'invalid_string_array',
+        value: '123'
+      });
+      await expect(integrationValidator.validate(invalidIntegration, integrationSchema)).rejects.toThrowError(
+        'must match the type STRING_ARRAY'
+      );
+    });
+  });
 });
