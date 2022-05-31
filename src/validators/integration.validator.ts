@@ -2,9 +2,7 @@ import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { IntegrationClient } from '../client/integration.client';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
-import { validateCodeSnippetPlaceholders } from './code-snippet.validator';
-import { validateEnabledChildItems, validateFeatureFlagsControlledByFields } from './configuration-field.validator';
-import { validateMarkdown } from './markdown.validator';
+import { validateConfigurationFields } from './configuration-field.validator';
 
 export default class IntegrationValidator {
   private integrationClient: IntegrationClient;
@@ -47,22 +45,10 @@ export default class IntegrationValidator {
       );
     }
 
-    const configurationFields = integration.pageSchemas.flatMap((page) => page.fields);
+    validateConfigurationFields(integration);
 
-    validateFeatureFlagsControlledByFields(integration.featureFlags.dependsOn || [], configurationFields, integration.name);
-
-    for (const configurationField of configurationFields) {
-      validateMarkdown(configurationField, integration.name);
-
-      validateEnabledChildItems(configurationField, configurationFields, integration.name);
-      for (const option of configurationField.options || []) {
-        validateEnabledChildItems(option, configurationFields, integration.name);
-      }
-
-      if (configurationField.type === 'CODE_SNIPPET') {
-        validateCodeSnippetPlaceholders(configurationField, configurationFields, integration.name);
-      }
-    }
+    // eslint-disable-next-line no-console
+    console.info(`Integration ${integration.name} is valid`);
     return true;
   }
 }
