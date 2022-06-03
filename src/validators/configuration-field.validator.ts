@@ -13,6 +13,10 @@ export function validateConfigurationFields(integration: IntegrationRequestDto) 
   for (const field of configurationFields) {
     validateMarkdown(field, integration.name);
 
+    if (field.id === 'configurationName') {
+      throw new Error(`[${integration.name}] Field id 'configurationName' is reserved. Please choose a different id.`);
+    }
+
     if (field.type === 'BOOLEAN' || field.type === 'RADIO') {
       validateEnabledChildItems(field, configurationFields, integration.name);
       for (const option of field.options || []) {

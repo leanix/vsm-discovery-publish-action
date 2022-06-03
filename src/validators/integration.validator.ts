@@ -47,8 +47,6 @@ export default class IntegrationValidator {
 
     validateConfigurationFields(integration);
 
-    // eslint-disable-next-line no-console
-    console.info(`Integration ${integration.name} is valid`);
     return true;
   }
 }
