@@ -36,7 +36,7 @@ async function run(): Promise<void> {
 
   try {
     await integrationValidator.validate(integration);
-    core.info('Integration is valid');
+    core.info(`Integration ${integration.name} is valid`);
 
     if (dryRun !== 'true') {
       await postIntegrationToAllRegions(integration);
