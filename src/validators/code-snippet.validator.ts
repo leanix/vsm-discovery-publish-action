@@ -8,7 +8,7 @@ export function validateCodeSnippetPlaceholders(
   fields: FieldSchemaRequestDto[],
   integrationName: string
 ) {
-  const globalVariables: Readonly<string[]> = ['workspaceId', 'fqdn'];
+  const globalVariables: Readonly<string[]> = ['configurationName', 'workspaceId', 'fqdn'];
 
   if (!snippetField.snippet) {
     throw new Error(
