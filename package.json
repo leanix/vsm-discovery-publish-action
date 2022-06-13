@@ -1,8 +1,8 @@
 {
-  "name": "validate-integration-action",
+  "name": "vsm-discovery-publish-action",
   "version": "1.0.0",
   "private": true,
-  "description": "Action for validate integration configuration JSON",
+  "description": "Action for validating and publishing integration configuration JSON",
   "main": "lib/src/main.js",
   "scripts": {
     "build": "tsc",
@@ -26,6 +26,8 @@
   "license": "Unlicense",
   "dependencies": {
     "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.0.3",
     "@azure/identity": "^2.0.4",
     "@azure/keyvault-secrets": "^4.4.0",
     "@types/lodash": "^4.14.182",

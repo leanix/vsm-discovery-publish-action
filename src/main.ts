@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as exec from '@actions/exec';
 import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
@@ -18,27 +19,12 @@ const REGIONS: Readonly<Record<string, string>> = {
 };
 
 async function run(): Promise<void> {
-  const integrationJsonPath = core.getInput('integration-json');
+  const integration = await getValidatedIntegrationRequestDto();
   const dryRun = core.getInput('dry-run');
-  let integration: IntegrationRequestDto;
-
-  const integrationValidator = new IntegrationValidator();
-
-  if (!integrationJsonPath) {
-    throwErrorAndExit('Please provide a path to the integration JSON file');
-  }
 
   try {
-    integration = fs.readJsonSync(integrationJsonPath);
-  } catch (error) {
-    throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
-  }
-
-  try {
-    await integrationValidator.validate(integration);
-    core.info(`Integration ${integration.name} is valid`);
-
     if (dryRun !== 'true') {
+      await postAssetsToVaulestreamsUI(integration.name);
       await postIntegrationToAllRegions(integration);
     }
   } catch (error) {
@@ -46,6 +32,41 @@ async function run(): Promise<void> {
       throwErrorAndExit(error.message);
     }
     throwErrorAndExit(`${error}`);
+  }
+}
+
+async function getValidatedIntegrationRequestDto(): Promise<IntegrationRequestDto> {
+  const integrationJsonPath = core.getInput('integration-json');
+
+  if (!integrationJsonPath || integrationJsonPath.length === 0) {
+    throwErrorAndExit('Please provide a path to the integration JSON file');
+  }
+
+  try {
+    const integration: IntegrationRequestDto = fs.readJsonSync(integrationJsonPath);
+
+    const integrationValidator = new IntegrationValidator();
+    await integrationValidator.validate(integration);
+    core.info(`Integration ${integration.name} is valid`);
+
+    return integration;
+  } catch (error) {
+    throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
+  }
+}
+
+async function postAssetsToVaulestreamsUI(integrationName: string) {
+  const sanitizedIntegrationName = integrationName.replace(' ', '-');
+  const assetsFolder = core.getInput('assets-folder');
+
+  if (!process.env.GITHUB_TOKEN) {
+    throw new Error(`Please add a step to inject secret store credentials before calling this Action (see leanix/secrets-action@master)`);
+  }
+
+  try {
+    await exec.exec('./scripts/post-assets-to-valuestreams-ui.sh', [sanitizedIntegrationName, assetsFolder]);
+  } catch (error) {
+    throw new Error(`Could not read assets folder from path '${assetsFolder}'`);
   }
 }
 
@@ -67,10 +88,16 @@ async function postIntegrationToAllRegions(integration: IntegrationRequestDto): 
 
 async function getClientSecretForRegion(region: string, regionId: string): Promise<KeyVaultSecret> {
   const vaultUrl = `https://lx${region}prod.vault.azure.net`;
+
+  if (!process.env.ARM_TENANT_ID || !process.env.ARM_CLIENT_ID || !process.env.ARM_CLIENT_SECRET) {
+    throw new Error(`Please add a step to inject secret store credentials before calling this Action (see leanix/secrets-action@master)`);
+  }
+
   const client = new SecretClient(
     vaultUrl,
-    new ClientSecretCredential(process.env.ARM_TENANT_ID!, process.env.ARM_CLIENT_ID!, process.env.ARM_CLIENT_SECRET!)
+    new ClientSecretCredential(process.env.ARM_TENANT_ID, process.env.ARM_CLIENT_ID, process.env.ARM_CLIENT_SECRET)
   );
+
   return await client.getSecret(`vsm-discovery-oauth-secret-${regionId}-svc`);
 }
 

@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+import * as fs from 'fs-extra';
 
 const pathMappings: Record<string, string> = {
   'vsm-discovery': 'src/.openapi-generated/models'

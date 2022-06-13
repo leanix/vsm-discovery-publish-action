@@ -1,14 +1,19 @@
 name: 'Validate Integration JSON'
 description: 'Validate an integration configuration JSON according to the schema defined in [@leanix/vsm-discovery](https://github.com/leanix/vsm-discovery)'
 author: 'LeanIX'
+
 inputs:
   integration-json:
     required: true
     description: 'Absolute path to the integration JSON file'
+  assets-folder:
+    required: false
+    description: 'Absolute path to the assets folder'
   dry-run:
     required: false
     default: 'false'
     description: 'Skip posting the integration to LeanIX regions. Useful for testing purposes.'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
