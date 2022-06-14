@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import * as exec from '@actions/exec';
+
 import { ClientSecretCredential } from '@azure/identity';
 // eslint-disable-next-line import/named
 import { KeyVaultSecret, SecretClient } from '@azure/keyvault-secrets';
@@ -7,6 +7,7 @@ import fs from 'fs-extra';
 import { IntegrationClient } from './client/integration.client';
 import { getMtmToken } from './client/mtm.client';
 import { IntegrationRequestDto } from './models/integration-request-dto';
+import AssetService from './asset.service';
 import IntegrationValidator from './validators/integration.validator';
 
 const REGIONS: Readonly<Record<string, string>> = {
@@ -20,11 +21,15 @@ const REGIONS: Readonly<Record<string, string>> = {
 
 async function run(): Promise<void> {
   const integration = await getValidatedIntegrationRequestDto();
+  const assetsFolder = core.getInput('assets-folder');
   const dryRun = core.getInput('dry-run');
 
   try {
     if (dryRun !== 'true') {
-      await postAssetsToVaulestreamsUI(integration.name);
+      const assetService = new AssetService();
+      assetService.updateAssetsPaths(integration);
+      await assetService.postAssetsToVaulestreamsUI(integration.name, assetsFolder);
+
       await postIntegrationToAllRegions(integration);
     }
   } catch (error) {
@@ -52,21 +57,6 @@ async function getValidatedIntegrationRequestDto(): Promise<IntegrationRequestDt
     return integration;
   } catch (error) {
     throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
-  }
-}
-
-async function postAssetsToVaulestreamsUI(integrationName: string) {
-  const sanitizedIntegrationName = integrationName.replace(' ', '-');
-  const assetsFolder = core.getInput('assets-folder');
-
-  if (!process.env.GITHUB_TOKEN) {
-    throw new Error(`Please add a step to inject secret store credentials before calling this Action (see leanix/secrets-action@master)`);
-  }
-
-  try {
-    await exec.exec('./scripts/post-assets-to-valuestreams-ui.sh', [sanitizedIntegrationName, assetsFolder]);
-  } catch (error) {
-    throw new Error(`Could not read assets folder from path '${assetsFolder}'`);
   }
 }
 

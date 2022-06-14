@@ -1,0 +1,99 @@
+{
+  "$schema": "./integration.schema.json",
+  "name": "githubrepository",
+  "docs": "https://docs-vsm.leanix.net/test",
+  "featureFlags": {
+    "dependsOn": [
+      {
+        "featureId": "integration.vsm.test",
+        "controlledBy": "field2"
+      }
+    ],
+    "showInList": "integration.vsm.test.showInList"
+  },
+  "category": "API",
+  "description": "test data for leanix/validate-integration-action",
+  "pageSchemas": [
+    {
+      "id": "page1",
+      "label": "Page 1",
+      "fields": [
+        {
+          "id": "field1",
+          "type": "RADIO",
+          "value": "option1",
+          "helpText": "field1 help",
+          "hintBox": "### HINT field1 hint",
+          "label": "field1 label",
+          "options": [
+            {
+              "id": "option1",
+              "enables": [
+                "field2"
+              ],
+              "label": "Option 1"
+            },
+            {
+              "id": "option2",
+              "label": "Option 2"
+            }
+          ]
+        },
+        {
+          "id": "field2",
+          "type": "BOOLEAN",
+          "value": true,
+          "helpText": "field2 help",
+          "hintBox": "### HINT field2 hint",
+          "label": "field2 label",
+          "enables": [
+            "field3"
+          ]
+        },
+        {
+          "id": "field3",
+          "type": "TEXT",
+          "label": "field3 label"
+        }
+      ]
+    },
+    {
+      "id": "page2",
+      "label": "page2",
+      "fields": [
+        {
+          "id": "snippet",
+          "type": "CODE_SNIPPET",
+          "label": "snippet",
+          "hintBox": "#### Heading ![Dora](assets/integrations/githubrepository/dora-flag-activate.png)",
+          "snippet": "field3: $field3, workspaceId: $workspaceId"
+        },
+        {
+          "id": "json",
+          "type": "JSON",
+          "label": "snippet",
+          "value": {
+            "hi": "there"
+          }
+        },
+        {
+          "id": "string-array",
+          "type": "STRING_ARRAY",
+          "label": "string-array",
+          "value": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        {
+          "id": "number",
+          "type": "NUMBER",
+          "label": "number",
+          "hintBox": "#### Heading ![GitHub Repository](assets/integrations/githubrepository/githubrepository.svg)",
+          "value": -123
+        }
+      ]
+    }
+  ]
+}

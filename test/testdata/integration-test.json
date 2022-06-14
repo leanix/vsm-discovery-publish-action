@@ -28,7 +28,9 @@
           "options": [
             {
               "id": "option1",
-              "enables": ["field2"],
+              "enables": [
+                "field2"
+              ],
               "label": "Option 1"
             },
             {
@@ -44,7 +46,9 @@
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
-          "enables": ["field3"]
+          "enables": [
+            "field3"
+          ]
         },
         {
           "id": "field3",
@@ -61,24 +65,32 @@
           "id": "snippet",
           "type": "CODE_SNIPPET",
           "label": "snippet",
+          "hintBox": "#### Heading ![Dora](dora-flag-activate.png)",
           "snippet": "field3: $field3, workspaceId: $workspaceId"
         },
         {
           "id": "json",
           "type": "JSON",
           "label": "snippet",
-          "value": { "hi": "there" }
+          "value": {
+            "hi": "there"
+          }
         },
         {
           "id": "string-array",
           "type": "STRING_ARRAY",
           "label": "string-array",
-          "value": ["a", "b", "c"]
+          "value": [
+            "a",
+            "b",
+            "c"
+          ]
         },
         {
           "id": "number",
           "type": "NUMBER",
           "label": "number",
+          "hintBox": "#### Heading ![GitHub Repository](githubrepository.svg)",
           "value": -123
         }
       ]
