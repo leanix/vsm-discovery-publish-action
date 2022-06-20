@@ -31,4 +31,4 @@ jobs:
         run: npm ci
 
       - name: Delete integration
-        run: npx ts-node ./scripts/delete-integration-all-regions.ts -- ${{ github.event.inputs.name }}
+        run: npx ts-node ./scripts/delete-integration-from-regions.ts "${{ github.event.inputs.name }}"
