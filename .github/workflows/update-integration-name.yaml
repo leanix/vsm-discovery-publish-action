@@ -11,7 +11,7 @@ on:
         required: true
 
 jobs:
-  delete-integration:
+  update-integration-name:
     runs-on: ubuntu-latest
 
     steps:
