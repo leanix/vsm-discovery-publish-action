@@ -1,6 +1,7 @@
 {
   "$schema": "./integration.schema.json",
   "name": "githubrepository",
+  "label": "GitHub Repository",
   "docs": "https://docs-vsm.leanix.net/test",
   "featureFlags": {
     "dependsOn": [
@@ -28,7 +29,9 @@
           "options": [
             {
               "id": "option1",
-              "enables": ["field2"],
+              "enables": [
+                "field2"
+              ],
               "label": "Option 1"
             },
             {
@@ -44,7 +47,9 @@
           "helpText": "field2 help",
           "hintBox": "### HINT field2 hint",
           "label": "field2 label",
-          "enables": ["field3"]
+          "enables": [
+            "field3"
+          ]
         },
         {
           "id": "field3",
@@ -67,13 +72,19 @@
           "id": "json",
           "type": "JSON",
           "label": "snippet",
-          "value": { "hi": "there" }
+          "value": {
+            "hi": "there"
+          }
         },
         {
           "id": "string-array",
           "type": "STRING_ARRAY",
           "label": "string-array",
-          "value": ["a", "b", "c"]
+          "value": [
+            "a",
+            "b",
+            "c"
+          ]
         },
         {
           "id": "number",
