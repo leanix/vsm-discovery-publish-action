@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Used to uniquely identify the integration"
     },
+    "label": {
+      "type": "string",
+      "description": "Used to display the integration to the user"
+    },
     "description": {
       "type": "string",
       "description": "Summary of the integration capabilities and use-cases"

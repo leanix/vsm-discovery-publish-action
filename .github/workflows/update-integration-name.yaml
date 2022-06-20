@@ -1,0 +1,37 @@
+name: Update integration name
+
+on:
+  workflow_dispatch:
+    inputs:
+      current-name:
+        description: Current name of the integration
+        required: true
+      new-name:
+        description: New name of the integration
+        required: true
+
+jobs:
+  delete-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Inject secret store credentials
+        uses: leanix/secrets-action@master
+        with:
+          secret-store-credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
+
+      - uses: actions/checkout@v3
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Delete integration
+        run: npx ts-node ./scripts/update-integration-name.ts "${{ github.event.inputs.current-name }}" "${{ github.event.inputs.new-name }}"
