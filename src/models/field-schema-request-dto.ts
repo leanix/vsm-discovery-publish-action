@@ -1,4 +1,4 @@
-import { FieldOptionSchemaEntity } from '../.openapi-generated/models/field-option-schema-entity';
+import { FieldOptionSchema } from '../.openapi-generated/models/field-option-schema';
 
 /**
  * Model used to save the definition of a field schema in an integration page.
@@ -9,7 +9,7 @@ export interface FieldSchemaRequestDto {
   hintBox?: string;
   id: string;
   label: string;
-  options?: Array<FieldOptionSchemaEntity>;
+  options?: Array<FieldOptionSchema>;
   placeholder?: string;
   required?: boolean;
   snippet?: string;
