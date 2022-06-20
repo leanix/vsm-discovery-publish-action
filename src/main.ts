@@ -4,6 +4,7 @@ import { IntegrationClient } from './client/integration.client';
 import { LeanixRegionClient } from './client/leanix-region.client';
 import { IntegrationRequestDto } from './models/integration-request-dto';
 import IntegrationValidator from './validators/integration.validator';
+import { throwErrorAndExit } from './errors';
 
 async function run(): Promise<void> {
   const integrationJsonPath = core.getInput('integration-json');
@@ -46,11 +47,6 @@ async function postIntegrationToAllRegions(integration: IntegrationRequestDto): 
     await integrationClient.upsertIntegration(regionId, integration, token);
     core.info(`Integration posted successfully to region ${region}`);
   }
-}
-
-export function throwErrorAndExit(message: string) {
-  core.setFailed(message);
-  process.exit(1);
 }
 
 void run();

@@ -1,6 +1,6 @@
 import { ClientSecretCredential } from '@azure/identity';
 import { SecretClient } from '@azure/keyvault-secrets';
-import { throwErrorAndExit } from '../main';
+import { throwErrorAndExit } from '../errors';
 import { getMtmToken } from '../client/mtm.client';
 
 export class LeanixRegionClient {

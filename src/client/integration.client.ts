@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
-import { IntegrationResponseDto } from '../models/integration-response-dto';
+import { IntegrationResponseDto } from '../.openapi-generated/models/integration-response-dto';
 
 export class IntegrationClient {
   async getIntegrations(regionId: string, token: string): Promise<IntegrationResponseDto[]> {
@@ -14,7 +14,7 @@ export class IntegrationClient {
       ).data;
     } catch (error) {
       const axiosError = error as AxiosError;
-      throw new Error(`Error getting integrations to region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
+      throw new Error(`Error getting integrations from region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
     }
   }
 
@@ -40,7 +40,7 @@ export class IntegrationClient {
       });
     } catch (error) {
       const axiosError = error as AxiosError;
-      throw new Error(`Error deleting integration to region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
+      throw new Error(`Error deleting integration from region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
     }
   }
 
