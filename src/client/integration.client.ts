@@ -1,7 +1,23 @@
 import axios, { AxiosError } from 'axios';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
+import { IntegrationResponseDto } from '../.openapi-generated/models/integration-response-dto';
 
 export class IntegrationClient {
+  async getIntegrations(regionId: string, token: string): Promise<IntegrationResponseDto[]> {
+    try {
+      return (
+        await axios.get<IntegrationResponseDto[]>(`https://${regionId}.leanix.net/services/vsm-discovery/v1/integrations`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      ).data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      throw new Error(`Error getting integrations from region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
+    }
+  }
+
   async upsertIntegration(regionId: string, integration: IntegrationRequestDto, token: string): Promise<void> {
     try {
       await axios.post(`https://${regionId}.leanix.net/services/vsm-discovery/v1/integrations`, integration, {
@@ -12,6 +28,19 @@ export class IntegrationClient {
     } catch (error) {
       const axiosError = error as AxiosError;
       throw new Error(`Error posting integration to region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
+    }
+  }
+
+  async deleteIntegration(regionId: string, integrationId: string, token: string): Promise<void> {
+    try {
+      await axios.delete(`https://${regionId}.leanix.net/services/vsm-discovery/v1/integrations/${integrationId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      throw new Error(`Error deleting integration from region ${regionId}: ${JSON.stringify(axiosError.response?.data)}`);
     }
   }
 

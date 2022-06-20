@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+import * as fs from 'fs-extra';
 
 const pathMappings: Record<string, string> = {
   'vsm-discovery': 'src/.openapi-generated/models'
@@ -23,4 +23,5 @@ try {
   throw new Error(`Could not copy ${filesSourceDir} to ${appPath}`);
 }
 
+// eslint-disable-next-line no-console
 console.info(`copied ${filesSourceDir} to ${appPath}`);
