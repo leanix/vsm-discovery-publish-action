@@ -12,6 +12,7 @@ export interface IntegrationResponseDto {
   docs: string;
   featureFlags: IntegrationFeatureFlags;
   id: string;
+  label: string;
   logo?: string;
   name: string;
   pageSchemas: Array<PageResponseDto>;
