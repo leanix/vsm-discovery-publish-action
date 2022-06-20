@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { FieldOptionSchemaEntity } from './field-option-schema-entity';
+import { FieldOptionSchema } from './field-option-schema';
 
 /**
  * Model used to return the definition of a field in an integration page.
@@ -11,7 +11,7 @@ export interface FieldResponseDto {
   hintBox?: string;
   id: string;
   label: string;
-  options?: Array<FieldOptionSchemaEntity>;
+  options?: Array<FieldOptionSchema>;
   placeholder?: string;
   required?: boolean;
   snippet?: string;
