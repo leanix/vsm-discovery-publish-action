@@ -1,5 +1,5 @@
 import { DependentFeatureFlag } from '../.openapi-generated/models/dependent-feature-flag';
-import { FieldOptionSchemaEntity } from '../.openapi-generated/models/field-option-schema-entity';
+import { FieldOptionSchema } from '../.openapi-generated/models/field-option-schema';
 import { FieldSchemaRequestDto } from '../models/field-schema-request-dto';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
 import { validateCodeSnippetPlaceholders } from './code-snippet.validator';
@@ -94,7 +94,7 @@ function validateDefaultValue(field: FieldSchemaRequestDto, integrationName: str
  * Ensures that referenced fields via the `enabled` property exist
  */
 function validateEnabledChildItems(
-  item: FieldSchemaRequestDto | FieldOptionSchemaEntity,
+  item: FieldSchemaRequestDto | FieldOptionSchema,
   allFields: FieldSchemaRequestDto[],
   integrationName: string
 ) {
