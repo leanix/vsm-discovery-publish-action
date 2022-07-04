@@ -23,11 +23,16 @@ export function validateMarkdown(integrationField: FieldSchemaRequestDto, integr
       throw new Error(`[${integrationName}] Markdown of field '${integrationField.id}' could not be parsed as valid HTML!`);
     }
 
-    // the image path depends on the vsm-discovery structure, might need to be adjusted
     for (const image of Array.from(document.querySelectorAll('img'))) {
-      if (!image.src.includes('images/') || !image.alt) {
+      if (image.src.includes('/')) {
         throw new Error(
-          `[${integrationName}] Image with source path '${image.src}' in field '${integrationField.id}' has invalid source path or missing alt text`
+          `[${integrationName}] Image with source path '${image.src}' in field '${integrationField.id}' has invalid source path. Please only enter the name of the file.`
+        );
+      }
+
+      if (!image.alt) {
+        throw new Error(
+          `[${integrationName}] Image with source path '${image.src}' in field '${integrationField.id}' has missing alt text`
         );
       }
     }

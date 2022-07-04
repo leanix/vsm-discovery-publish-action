@@ -34,6 +34,20 @@ jobs:
           npm install
           npm run all
 
+      - name: 'Store integration-test.json in env variable'
+        run: |
+          INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
+          ASSETS_FOLDER=$(echo "$(pwd)/test/testdata/assets")
+          echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
+          echo "assets_folder="$ASSETS_FOLDER >> $GITHUB_ENV
+
+      - name: 'Test action'
+        uses: ./
+        with:
+          integration-json: '${{ env.integration_json }}'
+          assets-folder: '${{ env.assets_folder }}'
+          dry-run: 'true'
+
       - name: Commit & push dist folder if needed
         run: |
           if expr $(git status --porcelain | grep dist | wc -l) \> 0; then
@@ -45,22 +59,3 @@ jobs:
           else
             echo "No dist files were updated"
           fi
-
-  # make sure the action works on a clean machine without building
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: 'Store integration-test.json in env variable'
-        run: |
-          INTEGRATION_JSON=$(echo "$(pwd)/test/testdata/integration-test.json")
-          echo "integration_json="$INTEGRATION_JSON >> $GITHUB_ENV
-      - name: 'Test action'
-        uses: ./
-        with:
-          integration-json: '${{ env.integration_json }}'
-          dry-run: 'true'

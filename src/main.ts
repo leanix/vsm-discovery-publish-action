@@ -1,34 +1,21 @@
 import * as core from '@actions/core';
 import fs from 'fs-extra';
-import { IntegrationClient } from './client/integration.client';
-import { LeanixRegionClient } from './client/leanix-region.client';
 import { IntegrationRequestDto } from './models/integration-request-dto';
 import IntegrationValidator from './validators/integration.validator';
 import { throwErrorAndExit } from './errors';
+import IntegrationService from './service/integration.service';
 
 async function run(): Promise<void> {
-  const integrationJsonPath = core.getInput('integration-json');
+  const integration = await getValidatedIntegrationRequestDto();
+  const assetFolder = core.getInput('assets-folder');
   const dryRun = core.getInput('dry-run');
-  let integration: IntegrationRequestDto;
 
-  const integrationValidator = new IntegrationValidator();
-
-  if (!integrationJsonPath) {
-    throwErrorAndExit('Please provide a path to the integration JSON file');
-  }
+  const integrationService = new IntegrationService(assetFolder);
 
   try {
-    integration = fs.readJsonSync(integrationJsonPath);
-  } catch (error) {
-    throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
-  }
-
-  try {
-    await integrationValidator.validate(integration);
-    core.info(`Integration ${integration.name} is valid`);
-
     if (dryRun !== 'true') {
-      await postIntegrationToAllRegions(integration);
+      await integrationService.postIntegrationToAllRegions(integration);
+      await integrationService.postAssetsToAllRegions(integration);
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -38,14 +25,23 @@ async function run(): Promise<void> {
   }
 }
 
-async function postIntegrationToAllRegions(integration: IntegrationRequestDto): Promise<void> {
-  const lxRegionClient = new LeanixRegionClient();
-  const integrationClient = new IntegrationClient();
+async function getValidatedIntegrationRequestDto(): Promise<IntegrationRequestDto> {
+  const integrationJsonPath = core.getInput('integration-json');
 
-  for (const [region, regionId] of Object.entries(LeanixRegionClient.REGIONS)) {
-    const token = await lxRegionClient.getMtmTokenForRegion(region, regionId);
-    await integrationClient.upsertIntegration(regionId, integration, token);
-    core.info(`Integration posted successfully to region ${region}`);
+  if (!integrationJsonPath || integrationJsonPath.length === 0) {
+    throwErrorAndExit('Please provide a path to the integration JSON file');
+  }
+
+  try {
+    const integration: IntegrationRequestDto = fs.readJsonSync(integrationJsonPath);
+
+    const integrationValidator = new IntegrationValidator();
+    await integrationValidator.validate(integration);
+    core.info(`Integration ${integration.name} is valid`);
+
+    return integration;
+  } catch (error) {
+    throw new Error(`Could not read integration JSON from path '${integrationJsonPath}'`);
   }
 }
 

@@ -13,7 +13,6 @@
   },
   "category": "API",
   "description": "test data for leanix/validate-integration-action",
-  "logo": "githubrepository.svg",
   "pageSchemas": [
     {
       "id": "page1",
@@ -66,7 +65,7 @@
           "id": "snippet",
           "type": "CODE_SNIPPET",
           "label": "snippet",
-          "hintBox": "#### Heading ![Dora](dora-flag-activate.png)",
+          "hintBox": "#### Heading ![Dora](assets/integrations/githubrepository/dora-flag-activate.png)",
           "snippet": "field3: $field3, workspaceId: $workspaceId"
         },
         {
@@ -91,7 +90,7 @@
           "id": "number",
           "type": "NUMBER",
           "label": "number",
-          "hintBox": "#### Heading ![GitHub Repository](githubrepository.svg)",
+          "hintBox": "#### Heading ![GitHub Repository](assets/integrations/githubrepository/githubrepository.svg)",
           "value": -123
         }
       ]

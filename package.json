@@ -1,8 +1,8 @@
 {
-  "name": "validate-integration-action",
+  "name": "vsm-discovery-publish-action",
   "version": "1.0.0",
   "private": true,
-  "description": "Action for validate integration configuration JSON",
+  "description": "Action for validating and publishing integration configuration JSON",
   "main": "lib/src/main.js",
   "scripts": {
     "build": "tsc",

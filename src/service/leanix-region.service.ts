@@ -3,7 +3,7 @@ import { SecretClient } from '@azure/keyvault-secrets';
 import { throwErrorAndExit } from '../errors';
 import { getMtmToken } from '../client/mtm.client';
 
-export class LeanixRegionClient {
+export default class LeanixRegionService {
   // Pairs <region, regionId>
   static REGIONS: Readonly<Record<string, string>> = {
     westeurope: 'eu',
