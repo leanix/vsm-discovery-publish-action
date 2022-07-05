@@ -10,12 +10,12 @@ async function run(): Promise<void> {
   const assetFolder = core.getInput('assets-folder');
   const dryRun = core.getInput('dry-run');
 
-  const integrationService = new IntegrationService(assetFolder);
+  const integrationService = new IntegrationService();
 
   try {
     if (dryRun !== 'true') {
       await integrationService.postIntegrationToAllRegions(integration);
-      await integrationService.postAssetsToAllRegions(integration);
+      await integrationService.postAssetsToAllRegions(integration.name, assetFolder);
     }
   } catch (error) {
     if (error instanceof Error) {

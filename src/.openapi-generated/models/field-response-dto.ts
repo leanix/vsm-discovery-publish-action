@@ -16,6 +16,5 @@ export interface FieldResponseDto {
   required?: boolean;
   snippet?: string;
   type: 'BOOLEAN' | 'CODE_SNIPPET' | 'EMAIL' | 'JSON' | 'NUMBER' | 'PASSWORD' | 'RADIO' | 'SCHEDULE' | 'STRING_ARRAY' | 'TEXT';
-  value?: {
-};
+  value?: {};
 }

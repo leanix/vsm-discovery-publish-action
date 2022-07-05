@@ -2,6 +2,8 @@ import axios, { AxiosError } from 'axios';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
 import { IntegrationResponseDto } from '../.openapi-generated/models/integration-response-dto';
 import { IntegrationAssetResponseDto } from '../models/integration-asset-response-dto';
+import FormData from 'form-data';
+import fs from 'fs-extra';
 
 export default class IntegrationClient {
   async getIntegrations(regionId: string, token: string): Promise<IntegrationResponseDto[]> {
@@ -55,15 +57,16 @@ export default class IntegrationClient {
     return response.data;
   }
 
-  async upsertAsset(regionId: string, integrationId: string, token: string, asset: string): Promise<IntegrationAssetResponseDto> {
+  async upsertAsset(regionId: string, integrationId: string, token: string, assetPath: string): Promise<IntegrationAssetResponseDto> {
     const formData = new FormData();
-    formData.append('asset', asset);
+    formData.append('asset', fs.createReadStream(assetPath));
+
     try {
       return (
         await axios.post(`${this.getBaseUrl(regionId)}/integrations/${integrationId}/assets`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
+            ...formData.getHeaders()
           }
         })
       ).data;
