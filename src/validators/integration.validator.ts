@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { IntegrationClient } from '../client/integration.client';
+import IntegrationClient from '../client/integration.client';
 import { IntegrationRequestDto } from '../models/integration-request-dto';
 import { validateConfigurationFields } from './configuration-field.validator';
 

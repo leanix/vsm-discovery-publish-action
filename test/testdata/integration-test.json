@@ -1,7 +1,6 @@
 {
   "$schema": "./integration.schema.json",
   "name": "githubrepository",
-  "label": "GitHub Repository",
   "docs": "https://docs-vsm.leanix.net/test",
   "featureFlags": {
     "dependsOn": [
@@ -14,6 +13,7 @@
   },
   "category": "API",
   "description": "test data for leanix/validate-integration-action",
+  "logo": "githubrepository.svg",
   "pageSchemas": [
     {
       "id": "page1",
@@ -66,6 +66,7 @@
           "id": "snippet",
           "type": "CODE_SNIPPET",
           "label": "snippet",
+          "hintBox": "#### Heading ![Dora](dora-flag-activate.png)",
           "snippet": "field3: $field3, workspaceId: $workspaceId"
         },
         {
@@ -90,6 +91,7 @@
           "id": "number",
           "type": "NUMBER",
           "label": "number",
+          "hintBox": "#### Heading ![GitHub Repository](githubrepository.svg)",
           "value": -123
         }
       ]

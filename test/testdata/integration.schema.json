@@ -39,6 +39,10 @@
       "description": "Link to the customer documentation of the integration (e.g., https://docs-vsm.leanix.net/{integration-name}).",
       "default": "https://docs-vsm.leanix.net/{integration-name}"
     },
+    "logo": {
+      "type": "string",
+      "description": "Name of the file used as logo."
+    },
     "featureFlags": {
       "type": "object",
       "description": "Activate the given feature flags",

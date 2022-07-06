@@ -1,15 +1,15 @@
 import * as core from '@actions/core';
 import { throwErrorAndExit } from '../src/errors';
-import { IntegrationClient } from '../src/client/integration.client';
-import { LeanixRegionClient } from '../src/client/leanix-region.client';
+import IntegrationClient from '../src/client/integration.client';
+import LeanixRegionService from '../src/service/leanix-region.service';
 
 async function deleteIntegrationByNameFromAllRegions() {
   const integrationName = getIntegrationName();
   const integrationClient = new IntegrationClient();
-  const lxRegionClient = new LeanixRegionClient();
+  const lxRegionService = new LeanixRegionService();
 
-  for (const [region, regionId] of Object.entries(LeanixRegionClient.REGIONS)) {
-    const token = await lxRegionClient.getMtmTokenForRegion(region, regionId);
+  for (const [region, regionId] of Object.entries(LeanixRegionService.REGIONS)) {
+    const token = await lxRegionService.getMtmTokenForRegion(region, regionId);
 
     const integration = (await integrationClient.getIntegrations(regionId, token)).find((it) => it.name === integrationName);
     if (!integration) {
