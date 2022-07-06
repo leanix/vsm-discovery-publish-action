@@ -57,9 +57,17 @@ export default class IntegrationClient {
     return response.data;
   }
 
-  async upsertAsset(regionId: string, integrationId: string, token: string, assetPath: string): Promise<IntegrationAssetResponseDto> {
+  async upsertAsset(
+    regionId: string,
+    integrationId: string,
+    token: string,
+    assetPath: string,
+    contentType: string
+  ): Promise<IntegrationAssetResponseDto> {
     const formData = new FormData();
-    formData.append('asset', fs.createReadStream(assetPath));
+    formData.append('asset', fs.createReadStream(assetPath), {
+      contentType
+    });
 
     try {
       return (

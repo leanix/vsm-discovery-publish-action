@@ -33,11 +33,19 @@ export default class IntegrationService {
       const assetsNames = fs.readdirSync(assetFolder);
       for (const assetName of assetsNames) {
         const assetPath = `${assetFolder}/${assetName}`;
-        await this.integrationClient.upsertAsset(regionId, integrationId, token, assetPath);
-        core.info(`Assets '${assetName}' posted successfully to region ${region}`);
+        const contentType = this.getContentTypeFromAssetName(assetName);
+        await this.integrationClient.upsertAsset(regionId, integrationId, token, assetPath, contentType);
+        core.info(`Asset '${assetName}' posted successfully to region ${region}`);
       }
 
       core.info(`All assets posted successfully to region ${region}`);
     }
+  }
+
+  private getContentTypeFromAssetName(assetName: string): string {
+    if (assetName.endsWith('.svg')) return 'image/svg+xml';
+    if (assetName.endsWith('.png')) return 'image/png';
+    if (assetName.endsWith('.jpg')) return 'image/jpeg';
+    return 'application/octet-stream';
   }
 }

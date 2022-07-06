@@ -26,7 +26,7 @@ export function validateMarkdown(integrationField: FieldSchemaRequestDto, integr
     for (const image of Array.from(document.querySelectorAll('img'))) {
       if (image.src.includes('/')) {
         throw new Error(
-          `[${integrationName}] Image with source path '${image.src}' in field '${integrationField.id}' has invalid source path. Please only enter the name of the file.`
+          `[${integrationName}] Image with source path '${image.src}' in field '${integrationField.id}' has invalid source path. Please only enter the name of the file and its extension.`
         );
       }
 

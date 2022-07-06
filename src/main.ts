@@ -28,7 +28,7 @@ async function run(): Promise<void> {
 async function getValidatedIntegrationRequestDto(): Promise<IntegrationRequestDto> {
   const integrationJsonPath = core.getInput('integration-json');
 
-  if (!integrationJsonPath || integrationJsonPath.length === 0) {
+  if (!integrationJsonPath || typeof integrationJsonPath !== 'string') {
     throwErrorAndExit('Please provide a path to the integration JSON file');
   }
 
