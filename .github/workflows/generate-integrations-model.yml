@@ -34,7 +34,7 @@ jobs:
         run: echo ::set-output name=specJson::$(curl --location --request GET 'https://eu.leanix.net/services/vsm-discovery/v1/openapi')
 
       - name: Write OpenAPI spec to file
-        uses: DamianReeves/write-file-action@v1.0
+        uses: DamianReeves/write-file-action@v1.1
         with:
           path: ${{ runner.temp }}/${{ github.event.client_payload.name }}.json
           contents: ${{ steps.fetch-openapi-spec.outputs.specJson }}
