@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { ConfigurationStatusDetails } from './configuration-status-details';
 import { PageResponseDto } from './page-response-dto';
 
 /**
@@ -10,4 +11,6 @@ export interface ConfigurationResponseDto {
   integrationId: string;
   name: string;
   pages: Array<PageResponseDto>;
+  status: 'VALID' | 'INVALID' | 'UNKNOWN';
+  statusDetails?: Array<ConfigurationStatusDetails>;
 }
