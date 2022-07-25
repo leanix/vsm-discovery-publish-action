@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface ConfigurationStatusDetails {
-  field: string;
+  field?: string;
   message: string;
 }
